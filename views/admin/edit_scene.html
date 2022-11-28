@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Edit Scene</title>
+</head>
+
+<body style="margin: 0px;">
+
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.52.0/dist/phaser.js"></script>
+
+    <script src="../scenes/EditSceneScene.js"></script>
+
+    <script type="text/javascript">
+        var config = {
+            type: Phaser.AUTO,
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH,
+            },
+            width: <%= width %>,
+            height: <%= height %>,
+            loader: {
+                crossOrigin: 'anonymous'
+            },
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    // debug: true,
+                    // debugShowBody: true
+                }
+            },
+            parent: 'phaser',
+            dom: {
+                createContainer: true
+            },
+            scene: [
+                EditSceneScene,
+            ]
+        };
+
+        var game = new Phaser.Game(config);
+        game.scene.start("EditSceneScene");
+    </script>
+</body>
+
+</html>
