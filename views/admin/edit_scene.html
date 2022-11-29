@@ -15,14 +15,15 @@
     <script src="../scenes/EditSceneScene.js"></script>
 
     <script type="text/javascript">
+
         var config = {
             type: Phaser.AUTO,
             scale: {
                 mode: Phaser.Scale.FIT,
                 autoCenter: Phaser.Scale.CENTER_BOTH,
             },
-            // width: <%= width %>,
-            // height: <%= height %>,
+            width: <%= width %>,
+            height: <%= height %>,
             loader: {
                 crossOrigin: 'anonymous'
             },
@@ -47,32 +48,6 @@
     </script>
 
     <script src="../config/items.js"></script>
-
-    <script type="text/javascript">
-        $(function () {
-            $('div div').addClass('item_board')
-            $('.item_board').append(`<ul class="nav nav-pills" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#location">Location</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#widget">Widget</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div id="location" class="container tab-pane active">
-                        <div style="overflow-y: scroll; height: 140px"></div>
-                    </div>
-                    <div id="widget" class="container tab-pane fade"><br>
-                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    </div>
-                </div>`)
-
-            for (const elem of locations) {
-                $('div#location div').append(`<img src="../assets/images/locations/${elem.url}" style="width: 100px; padding: 5px">`)
-            }
-        })
-    </script>
 </body>
 
 </html>
