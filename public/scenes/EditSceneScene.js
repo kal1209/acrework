@@ -7,6 +7,10 @@ var EditSceneScene = new Phaser.Class({
     },
     init: function () { },
     preload: function () {
+        for (const elem of widgets) {
+            this.load.image(`${elem.name}`, `../assets/images/widgets/${elem.url}`)
+        }
+
         for (const elem of locations) {
             this.load.image(`${elem.name}`, `../assets/images/locations/${elem.url}`)
         }
@@ -38,20 +42,37 @@ var EditSceneScene = new Phaser.Class({
                     <div style="overflow-y: scroll; height: 140px"></div>
                 </div>
                 <div id="widget" class="container tab-pane fade"><br>
-                    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <div style="overflow-y: scroll; height: 140px"></div>
                 </div>
             </div>`)
 
         for (const elem of locations) {
             $('div#location div').append(`<img src="../assets/images/locations/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="selLocation('${elem.name}')">`)
         }
+
+        for (const elem of widgets) {
+            $('div#widget div').append(`<img src="../assets/images/widgets/${elem.url}" style="width: 70px; padding: 5px; cursor: pointer;" ondblclick="addWidget('${elem.name}')">`)
+        }
     },
     selLocation: function (data) {
-        // console.log(data)
+        // change the background
         this.locationBg.setTexture(data)
     },
+    addWidget: function (data) {
+        this.add.sprite(100, 100 , data).setInteractive({
+            draggable: true,
+            useHandCursor: true,
+            pixelPerfect: true
+        }).on('drag', function (pointer, dragX, dragY) {
+            this.setPosition(dragX, dragY);
+        })
+    }
 });
 
 function selLocation(data) {
     curScene.selLocation(data)
+}
+
+function addWidget(data) {
+    curScene.addWidget(data)
 }

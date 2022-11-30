@@ -13,3 +13,22 @@ const locations = [
         url: 'kitchen.webp'
     }
 ]
+
+const widgets = [
+    {
+        name: 'clock',
+        url: 'clock.webp'
+    },
+    {
+        name: 'closet',
+        url: 'closet.webp'
+    },
+    {
+        name: 'furniture_03',
+        url: 'furniture_03.webp'
+    },
+    {
+        name: 'furniture_01',
+        url: 'furniture_01.webp'
+    }
+]
