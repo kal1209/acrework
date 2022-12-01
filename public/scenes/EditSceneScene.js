@@ -1,5 +1,6 @@
 let curScene
 let sceneId
+let projectId
 let situation = []
 
 var EditSceneScene = new Phaser.Class({
@@ -37,11 +38,35 @@ var EditSceneScene = new Phaser.Class({
             </div><button type="button" class="btn btn-primary btn-save">Save</button>`)
 
         for (const elem of items) {
-            $(`div#${elem.type} div`).append(`<img src="../assets/images/${elem.type}/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="addItem('${elem.name}', '${elem.type}')">`)
+            $(`div#${elem.type} div`).append(`<img src="../assets/images/${elem.type}/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="addItem(Math.random().toString(36).slice(-9), '${elem.name}', '${elem.type}', 100, 100)">`)
         }
+
+        this.loadScene()
     },
-    addItem: function (name, type) {
-        let tmpSprite = this.add.sprite(100, 100, name).setInteractive({
+    loadScene: function () {
+        $.ajax({
+            url: "load_scene",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                project_id: projectId,
+                scene_id: sceneId,
+            },
+            success: async function (res) {
+                if (res.success) {
+                    let tmpSituation = res.situation
+                    for (const elem of tmpSituation) {
+                        addItem(elem.id, elem.name, elem.type, elem.x, elem.y)
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('error');
+            }
+        });
+    },
+    addItem: function (id, name, type, x, y) {
+        let tmpSprite = this.add.sprite(x, y, name).setInteractive({
             draggable: true,
             useHandCursor: true,
             pixelPerfect: true
@@ -52,7 +77,7 @@ var EditSceneScene = new Phaser.Class({
             situation.find(e => e.id == this.id).y = dragY
         });
 
-        tmpSprite.id = Math.random().toString(36).slice(-9)
+        tmpSprite.id = id
         tmpSprite.setDepth(depthList[type])
 
         situation.push({
@@ -63,11 +88,9 @@ var EditSceneScene = new Phaser.Class({
             x: tmpSprite.x,
             y: tmpSprite.y
         })
-
-        console.log(situation)
     },
 });
 
-function addItem(name, type) {
-    curScene.addItem(name, type)
+function addItem(id, name, type, x, y) {
+    curScene.addItem(id, name, type, x, y)
 }

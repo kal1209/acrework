@@ -87,7 +87,12 @@ app.get('/admin/edit_project', async (req, res) => {
 app.get('/admin/edit_scene', async (req, res) => {
     const project = await projectModel.findOne({ _id: req.query.project_id });
 
-    res.render('admin/edit_scene', project)
+    res.render('admin/edit_scene', {
+        _id: project.id,
+        name: project.name,
+        width: project.width,
+        height: project.height,
+    })
 });
 
 app.post('/admin/save_scene', async (req, res) => {
@@ -111,3 +116,16 @@ app.post('/admin/save_scene', async (req, res) => {
         success: true,
     });
 });
+
+app.post('/admin/load_scene', async (req, res) => {
+    const project = await projectModel.findOne({ _id: req.body.project_id });
+
+    let old = project.scene.find(e => {
+        return JSON.parse(e).id == req.body.scene_id
+    })
+    
+    res.json({
+        success: true,
+        situation: old ? JSON.parse(old).situation : []
+    });
+})

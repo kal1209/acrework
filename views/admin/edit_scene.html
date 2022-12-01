@@ -16,9 +16,11 @@
     <script src="../scenes/EditSceneScene.js"></script>
 
     <script type="text/javascript">
+        projectId = '<%= _id %>';
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
 
+        sceneId = urlParams.get('scene_id');
         if (urlParams.get('scene_id') == '') {
             sceneId = Math.random().toString(36).slice(-9);
         }
@@ -56,13 +58,15 @@
 
     <script type="text/javascript">
         $(function () {
+            
+
             $(document).on('click', '.btn-save', function () {
                 $.ajax({
                     url: "save_scene",
                     type: "POST",
                     dataType: 'json',
                     data: {
-                        project_id: '<%= _id %>',
+                        project_id: projectId,
                         scene: {
                             id: sceneId,
                             situation: situation,
@@ -70,6 +74,7 @@
                     },
                     success: async function (res) {
                         if (res.success) {
+                            window.alert("saved")
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
