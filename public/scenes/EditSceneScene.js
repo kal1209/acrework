@@ -1,4 +1,5 @@
 let curScene
+let situation = []
 
 var EditSceneScene = new Phaser.Class({
     Extends: Phaser.Scene,
@@ -7,24 +8,12 @@ var EditSceneScene = new Phaser.Class({
     },
     init: function () { },
     preload: function () {
-        for (const elem of widgets) {
-            this.load.image(`${elem.name}`, `../assets/images/widgets/${elem.url}`)
-        }
-
-        for (const elem of locations) {
-            this.load.image(`${elem.name}`, `../assets/images/locations/${elem.url}`)
+        for (const elem of items) {
+            this.load.image(`${elem.name}`, `../assets/images/${elem.type}/${elem.url}`)
         }
     },
     create: async function () {
         curScene = this
-
-        this.locationBg = this.add.image(0, 0, '').setOrigin(0, 0).setInteractive({
-            draggable: true,
-            useHandCursor: true,
-            pixelPerfect: true
-        }).on('drag', function (pointer, dragX, dragY) {
-            this.setPosition(dragX, dragY);
-        })
 
         this.item_board = this.add.dom(this.sys.game.canvas.width / 2, this.sys.game.canvas.height, 'div', `background-color: white; width: ${this.sys.game.canvas.width / 3}px; height: 200px; padding: 10px`, '').setOrigin(0.5, 1);
 
@@ -46,33 +35,34 @@ var EditSceneScene = new Phaser.Class({
                 </div>
             </div>`)
 
-        for (const elem of locations) {
-            $('div#location div').append(`<img src="../assets/images/locations/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="selLocation('${elem.name}')">`)
-        }
-
-        for (const elem of widgets) {
-            $('div#widget div').append(`<img src="../assets/images/widgets/${elem.url}" style="width: 70px; padding: 5px; cursor: pointer;" ondblclick="addWidget('${elem.name}')">`)
+        for (const elem of items) {
+            $(`div#${elem.type} div`).append(`<img src="../assets/images/${elem.type}/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="addItem('${elem.name}', '${elem.type}')">`)
         }
     },
-    selLocation: function (data) {
-        // change the background
-        this.locationBg.setTexture(data)
-    },
-    addWidget: function (data) {
-        this.add.sprite(100, 100 , data).setInteractive({
+    addItem: function (name, type) {
+        let tmpSprite = this.add.sprite(100, 100, name).setInteractive({
             draggable: true,
             useHandCursor: true,
             pixelPerfect: true
         }).on('drag', function (pointer, dragX, dragY) {
             this.setPosition(dragX, dragY);
+
+            situation.find(e => e.id == this.id).x = dragX
+            situation.find(e => e.id == this.id).y = dragY
+        });
+
+        tmpSprite.id = Math.random().toString(36).slice(-9)
+
+        situation.push({
+            id: tmpSprite.id,
+            name: name,
+            type: type,
+            x: tmpSprite.x,
+            y: tmpSprite.y
         })
-    }
+    },
 });
 
-function selLocation(data) {
-    curScene.selLocation(data)
-}
-
-function addWidget(data) {
-    curScene.addWidget(data)
+function addItem(name, type) {
+    curScene.addItem(name, type)
 }
