@@ -58,8 +58,6 @@
 
     <script type="text/javascript">
         $(function () {
-            
-
             $(document).on('click', '.btn-save', function () {
                 $.ajax({
                     url: "save_scene",
@@ -74,7 +72,7 @@
                     },
                     success: async function (res) {
                         if (res.success) {
-                            window.alert("saved")
+                            window.alert("scene saved")
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {

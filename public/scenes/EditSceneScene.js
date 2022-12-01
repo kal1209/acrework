@@ -43,7 +43,7 @@ var EditSceneScene = new Phaser.Class({
 
         this.loadScene()
     },
-    loadScene: function () {
+    loadScene: function () { // load the current scene situation
         $.ajax({
             url: "load_scene",
             type: "POST",
@@ -54,8 +54,7 @@ var EditSceneScene = new Phaser.Class({
             },
             success: async function (res) {
                 if (res.success) {
-                    let tmpSituation = res.situation
-                    for (const elem of tmpSituation) {
+                    for (const elem of res.situation) {
                         addItem(elem.id, elem.name, elem.type, elem.x, elem.y)
                     }
                 }
@@ -65,7 +64,7 @@ var EditSceneScene = new Phaser.Class({
             }
         });
     },
-    addItem: function (id, name, type, x, y) {
+    addItem: function (id, name, type, x, y) { // add items into scene
         let tmpSprite = this.add.sprite(x, y, name).setInteractive({
             draggable: true,
             useHandCursor: true,
