@@ -1,4 +1,5 @@
 let curScene
+let sceneId
 let situation = []
 
 var EditSceneScene = new Phaser.Class({
@@ -28,12 +29,12 @@ var EditSceneScene = new Phaser.Class({
             </ul>
             <div class="tab-content">
                 <div id="location" class="container tab-pane active">
-                    <div style="overflow-y: scroll; height: 140px"></div>
+                    <div style="overflow-y: scroll; height: 80px;"></div>
                 </div>
                 <div id="widget" class="container tab-pane fade"><br>
-                    <div style="overflow-y: scroll; height: 140px"></div>
+                    <div style="overflow-y: scroll; height: 80px;"></div>
                 </div>
-            </div>`)
+            </div><button type="button" class="btn btn-primary btn-save">Save</button>`)
 
         for (const elem of items) {
             $(`div#${elem.type} div`).append(`<img src="../assets/images/${elem.type}/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="addItem('${elem.name}', '${elem.type}')">`)

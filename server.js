@@ -68,7 +68,8 @@ app.post('/admin/create_project', async (req, res) => {
     const project = new projectModel({
         name: req.body.name,
         width: req.body.width,
-        height: req.body.height
+        height: req.body.height,
+        scene: [],
     });
     await project.save();
 
@@ -84,8 +85,29 @@ app.get('/admin/edit_project', async (req, res) => {
 });
 
 app.get('/admin/edit_scene', async (req, res) => {
-    console.log(req.query)
     const project = await projectModel.findOne({ _id: req.query.project_id });
 
     res.render('admin/edit_scene', project)
+});
+
+app.post('/admin/save_scene', async (req, res) => {
+    const project = await projectModel.findOne({ _id: req.body.project_id });
+
+    let oldIndex = project.scene.findIndex(e => {
+        return JSON.parse(e).id == req.body.scene.id
+    })
+    
+    if (oldIndex == -1) {
+        project.scene.push(JSON.stringify(req.body.scene))
+    } else {
+        project.scene[oldIndex] = JSON.stringify(req.body.scene)
+    }
+
+    await projectModel.updateOne({
+        _id: req.body.project_id
+    }, { scene: project.scene}, { upsert: true });
+
+    res.json({
+        success: true,
+    });
 });

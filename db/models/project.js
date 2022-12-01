@@ -16,7 +16,7 @@ const ProjectSchema= new Schema({
     required: true,
   },
   scene: {
-    type: String,
+    type: Array,
     required: false,
   }
 });
