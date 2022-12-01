@@ -9,7 +9,7 @@
 <body style="margin: 0px;">
     <div class="jumbotron text-center">
         <h1>Building Game Engine</h1>
-        <a href="/admin/create">Create New Project</a>
+        <a href="/admin/create_project">Create New Project</a>
     </div>
 
     <div class="container">
@@ -65,7 +65,7 @@
             });
 
             $(document).on('click', '.btn-edit', function () {
-                window.location.href = `/admin/edit?id=${$(this).data('id')}`
+                window.location.href = `/admin/edit_project?project_id=${$(this).data('id')}`
             });
         })
     </script>

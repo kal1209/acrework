@@ -51,8 +51,8 @@ app.get('/admin/', async (req, res) => {
     res.render('admin/index')
 });
 
-app.get('/admin/create', async (req, res) => {
-    res.render('admin/create')
+app.get('/admin/create_project', async (req, res) => {
+    res.render('admin/create_project')
 });
 
 app.post('/admin/list', async (req, res) => {
@@ -64,7 +64,7 @@ app.post('/admin/list', async (req, res) => {
     });
 });
 
-app.post('/admin/create', async (req, res) => {
+app.post('/admin/create_project', async (req, res) => {
     const project = new projectModel({
         name: req.body.name,
         width: req.body.width,
@@ -77,27 +77,15 @@ app.post('/admin/create', async (req, res) => {
     });
 });
 
-app.post('/admin/create', async (req, res) => {
-    const project = new projectModel({
-        name: req.body.name,
-        width: req.body.width,
-        height: req.body.height
-    });
-    await project.save();
+app.get('/admin/edit_project', async (req, res) => {
+    const project = await projectModel.findOne({ _id: req.query.project_id });
 
-    res.json({
-        success: true,
-    });
-});
-
-app.get('/admin/edit', async (req, res) => {
-    const project = await projectModel.findOne({_id: req.query.id});
-
-    res.render('admin/edit', project)
+    res.render('admin/edit_project', project)
 });
 
 app.get('/admin/edit_scene', async (req, res) => {
-    const project = await projectModel.findOne({_id: req.query.id});
-    
+    console.log(req.query)
+    const project = await projectModel.findOne({ _id: req.query.project_id });
+
     res.render('admin/edit_scene', project)
 });

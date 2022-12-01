@@ -14,6 +14,10 @@ const ProjectSchema= new Schema({
   height: {
     type: Number,
     required: true,
+  },
+  scene: {
+    type: String,
+    required: false,
   }
 });
 

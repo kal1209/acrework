@@ -1,3 +1,8 @@
+var depthList = {
+    location: 1,
+    widget: 2,
+};
+
 const items = [
     {
         name: 'bathroom',

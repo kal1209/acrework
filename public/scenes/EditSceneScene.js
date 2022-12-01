@@ -52,14 +52,18 @@ var EditSceneScene = new Phaser.Class({
         });
 
         tmpSprite.id = Math.random().toString(36).slice(-9)
+        tmpSprite.setDepth(depthList[type])
 
         situation.push({
             id: tmpSprite.id,
             name: name,
             type: type,
+            depth: tmpSprite._depth,
             x: tmpSprite.x,
             y: tmpSprite.y
         })
+
+        console.log(situation)
     },
 });
 
