@@ -40,7 +40,9 @@ var EditSceneScene = new Phaser.Class({
             </div><button type="button" class="btn btn-primary btn-save">Save</button>`)
 
         for (const elem of engine.items) {
-            $(`div#${elem.type} div`).append(`<img src="../assets/images/${elem.type}/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="addItem(Math.random().toString(36).slice(-9), '${elem.name}', '${elem.type}', 100, 100), '${elem.depth}'">`)
+            console.log(elem)
+
+            $(`div#${elem.type} div`).append(`<img src="../assets/images/${elem.type}/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="addItem(Math.random().toString(36).slice(-9), '${elem.name}', '${elem.type}', 100, 100, '${elem.depth}')">`)
         }
 
         this.loadScene()
@@ -93,5 +95,6 @@ var EditSceneScene = new Phaser.Class({
 });
 
 function addItem(id, name, type, x, y, depth) {
+    console.log(id, name, type, x, y, depth)
     curScene.addItem(id, name, type, x, y, depth)
 }
