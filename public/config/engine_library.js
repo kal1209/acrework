@@ -43,6 +43,32 @@ class Engine {
                 draggable: true,
             },
             {
+                name: 'door',
+                type: 'widget',
+                url: 'door.webp',
+                depth: 2,
+                interactable: true,
+                title: 'Door',
+                draggable: true,
+            },
+            {
+                name: 'counter',
+                type: 'widget',
+                url: 'counter.webp',
+                depth: 2,
+                interactable: false,
+                draggable: true,
+            },
+            {
+                name: 'mf',
+                type: 'widget',
+                url: 'mf.webp',
+                depth: 2,
+                interactable: true,
+                title: 'Mini Fridge',
+                draggable: true,
+            },
+            {
                 name: 'clock',
                 type: 'widget',
                 url: 'clock.webp',
@@ -118,10 +144,16 @@ class Engine {
                 name: 'frame_objname_gold',
                 url: 'frame_objname_gold.webp',
                 depth: 10,
-            }
+            },
+            {
+                name: 'investigate',
+                url: 'investigate.webp',
+                depth: 10,
+            },
         ]
 
         this.tooltip = undefined
+        this.hoverDisabled = false
     }
     getItem(name) {
         return this.items.find(e => e.name == name)
@@ -138,19 +170,50 @@ class Engine {
         }).setOrigin(0, 0).setDepth(item.depth).on('drag', function (pointer, dragX, dragY) {
             this.setPosition(dragX, dragY);
             console.log([item.name, dragX, dragY])
-        }).on('pointerover', () => {
+        }).on('pointerup', () => {
             if (item.interactable) {
-                this.tooltip.setPosition(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100)
-                this.tooltip.list[1].setText(item.title)
-                this.tooltip.setAlpha(1)
+                this.hoverDisabled = true
+                this.showActionTip()
+            } else {
+                this.hideTooltip()
+            }
+        }).on('pointerover', () => {
+            if (item.interactable && !this.hoverDisabled) {
+                this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, item.title)
             }
         }).on('pointerout', () => {
-            this.tooltip.setAlpha(0)
+            if (!this.hoverDisabled) {
+                this.hideTooltip()
+            }
         })
     }
-    initTooltip(scene, infoBg) {
+    initTooltip(scene) {
         this.tooltip = scene.add.container(100, 100).setDepth(10).setAlpha(0)
-        this.tooltip.add(scene.add.sprite(0, 0, infoBg.name))
+        this.tooltip.add(scene.add.sprite(0, 0, this.getUI('frame_objname_gold').name))
         this.tooltip.add(scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5))
+
+        this.tooltip.add(scene.add.sprite(0, -100, this.getUI('investigate').name).setAlpha(0).setInteractive({
+            useHandCursor: true,
+            pixelPerfect: true
+        }).on('pointerup', () => {
+            alert('investigate')
+            this.hideTooltip()
+        }))
+    }
+    showTooltip(x, y, title) {
+        this.tooltip.setPosition(x, y)
+        this.tooltip.setAlpha(1)
+        this.tooltip.list[1].setText(title)
+    }
+    hideTooltip() {
+        this.tooltip.setAlpha(0)
+        this.hideActionTip()
+        this.hoverDisabled = false
+    }
+    showActionTip() {
+        this.tooltip.list[2].setAlpha(1)
+    }
+    hideActionTip() {
+        this.tooltip.list[2].setAlpha(0)
     }
 }

@@ -18,13 +18,16 @@ var TestScene = new Phaser.Class({
         }
     },
     create: async function () {
-        this.engine.initTooltip(this, this.engine.getUI('frame_objname_gold'))
+        this.engine.initTooltip(this)
 
         // add location
         this.engine.addItem(this, 0, 0, this.engine.getItem('kitchen'))
 
         // add stairs
         this.engine.addItem(this, 0, 0, this.engine.getItem('stairs'))
+
+        // add door
+        this.engine.addItem(this, 175, 196, this.engine.getItem('door'))
 
         this.engine.addItem(this, 1425, 182, this.engine.getItem('closet'))
 
@@ -40,5 +43,9 @@ var TestScene = new Phaser.Class({
         this.engine.addItem(this, 448, 668, this.engine.getItem('d2'))
 
         this.engine.addItem(this, 1499, 258, this.engine.getItem('s1'))
+
+        // add counter
+        this.engine.addItem(this, 577, 595, this.engine.getItem('counter'))
+        this.engine.addItem(this, 833, 670, this.engine.getItem('mf'))
     },
 });
