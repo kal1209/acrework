@@ -1,10 +1,5 @@
 class Engine {
     constructor() {
-        this.depthList = {
-            location: 1,
-            widget: 2,
-        };
-
         this.items = [
             // locations
             {
@@ -44,6 +39,7 @@ class Engine {
                 url: 'stairs.webp',
                 depth: 3,
                 interactable: true,
+                title: 'Stairs',
                 draggable: true,
             },
             {
@@ -55,6 +51,7 @@ class Engine {
                 draggable: true,
             },
             {
+
                 name: 'closet',
                 type: 'widget',
                 url: 'closet.webp',
@@ -84,6 +81,7 @@ class Engine {
                 url: 'd1.webp',
                 depth: 2,
                 interactable: true,
+                title: 'Drawer',
                 draggable: true,
             },
             {
@@ -92,6 +90,7 @@ class Engine {
                 url: 'd3.webp',
                 depth: 2,
                 interactable: true,
+                title: 'Drawer',
                 draggable: true,
             },
             {
@@ -100,6 +99,7 @@ class Engine {
                 url: 'd2.webp',
                 depth: 2,
                 interactable: true,
+                title: 'Drawer',
                 draggable: true,
             },
             {
@@ -108,22 +108,49 @@ class Engine {
                 url: 's1.webp',
                 depth: 2,
                 interactable: true,
+                title: 'Shelf',
                 draggable: true,
             },
         ]
+
+        this.ui = [
+            {
+                name: 'frame_objname_gold',
+                url: 'frame_objname_gold.webp',
+                depth: 10,
+            }
+        ]
+
+        this.tooltip = undefined
     }
     getItem(name) {
         return this.items.find(e => e.name == name)
     }
+    getUI(name) {
+        return this.ui.find(e => e.name == name)
+    }
     addItem(scene, x, y, item) {
-        let container = scene.add.container(x, y)
-        container.add(scene.add.sprite(0, 0, item.name).setInteractive({
-            draggable: item.draggable,
+        let tmp = scene.add.sprite(x, y, item.name).setInteractive({
+            // draggable: item.draggable,
+            draggable: false,
             useHandCursor: item.interactable,
             pixelPerfect: true
-        }).setOrigin(0, 0).on('drag', function (pointer, dragX, dragY) {
+        }).setOrigin(0, 0).setDepth(item.depth).on('drag', function (pointer, dragX, dragY) {
             this.setPosition(dragX, dragY);
             console.log([item.name, dragX, dragY])
-        })).setDepth(item.depth)
+        }).on('pointerover', () => {
+            if (item.interactable) {
+                this.tooltip.setPosition(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100)
+                this.tooltip.list[1].setText(item.title)
+                this.tooltip.setAlpha(1)
+            }
+        }).on('pointerout', () => {
+            this.tooltip.setAlpha(0)
+        })
+    }
+    initTooltip(scene, infoBg) {
+        this.tooltip = scene.add.container(100, 100).setDepth(10).setAlpha(0)
+        this.tooltip.add(scene.add.sprite(0, 0, infoBg.name))
+        this.tooltip.add(scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5))
     }
 }
