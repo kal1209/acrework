@@ -47,6 +47,10 @@ server.listen(process.env.PORT, function () {
     console.log(`listening on port ${process.env.PORT}`);
 });
 
+app.get('/', async (req, res) => {
+    res.render('index')
+});
+
 app.get('/admin/', async (req, res) => {
     res.render('admin/index')
 });
