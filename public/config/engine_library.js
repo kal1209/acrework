@@ -7,38 +7,46 @@ const items = [
     {
         name: 'bathroom',
         type: 'location',
-        url: 'bathroom.webp'
+        url: 'bathroom.webp',
+        depth: depthList.location,
     }, {
         name: 'bedroom',
         type: 'location',
-        url: 'bedroom.webp'
+        url: 'bedroom.webp',
+        depth: depthList.location,
     }, {
         name: 'homehall',
         type: 'location',
-        url: 'homehall.webp'
+        url: 'homehall.webp',
+        depth: depthList.location,
     }, {
         name: 'kitchen',
         type: 'location',
-        url: 'kitchen.webp'
+        url: 'kitchen.webp',
+        depth: depthList.location,
     },
     {
         name: 'clock',
         type: 'widget',
-        url: 'clock.webp'
+        url: 'clock.webp',
+        depth: depthList.widget,
     },
     {
         name: 'closet',
         type: 'widget',
-        url: 'closet.webp'
+        url: 'closet.webp',
+        depth: depthList.widget,
     },
     {
         name: 'furniture_03',
         type: 'widget',
-        url: 'furniture_03.webp'
+        url: 'furniture_03.webp',
+        depth: depthList.widget,
     },
     {
         name: 'furniture_01',
         type: 'widget',
-        url: 'furniture_01.webp'
+        url: 'furniture_01.webp',
+        depth: depthList.widget,
     }
 ]
