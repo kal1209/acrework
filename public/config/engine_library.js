@@ -41,6 +41,9 @@ class Engine {
                 interactable: true,
                 title: 'Stairs',
                 draggable: true,
+                investigate: {
+                    msg: "These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."
+                }
             },
             {
                 name: 'door',
@@ -146,6 +149,16 @@ class Engine {
                 depth: 10,
             },
             {
+                name: 'frame_int_text',
+                url: 'frame_int_text.webp',
+                depth: 10,
+            },
+            {
+                name: 'frame_popup',
+                url: 'frame_popup.webp',
+                depth: 10,
+            },
+            {
                 name: 'investigate',
                 url: 'investigate.webp',
                 depth: 10,
@@ -173,7 +186,9 @@ class Engine {
         }).on('pointerup', () => {
             if (item.interactable) {
                 this.hoverDisabled = true
+                this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, item.title)
                 this.showActionTip()
+                this.setInvestigateMsg(item.investigate ? item.investigate.msg : '')
             } else {
                 this.hideTooltip()
             }
@@ -189,16 +204,29 @@ class Engine {
     }
     initTooltip(scene) {
         this.tooltip = scene.add.container(100, 100).setDepth(10).setAlpha(0)
-        this.tooltip.add(scene.add.sprite(0, 0, this.getUI('frame_objname_gold').name))
-        this.tooltip.add(scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5))
+        this.tooltip.add(scene.add.sprite(0, 0, this.getUI('frame_objname_gold').name)) // index: 0
+        this.tooltip.add(scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5)) // index: 1
 
+        // add investigate icon
         this.tooltip.add(scene.add.sprite(0, -100, this.getUI('investigate').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
-            alert('investigate')
-            this.hideTooltip()
-        }))
+            this.hideActionTip()
+            this.showActionMsg()
+        }).on('pointerover', () => {
+            this.showActionInfoBar('investigate')
+        }).on('pointerout', () => {
+            this.hideActionInfoBar()
+        })) // index: 2
+
+        // add action info bar
+        this.tooltip.add(scene.add.sprite(0, 80, this.getUI('frame_int_text').name).setAlpha(0)) // index: 3
+        this.tooltip.add(scene.add.text(0, 80, '', { font: "bold 28px Arial ", fill: "#000" }).setOrigin(0.5).setAlpha(0)) // index: 4
+
+        // add investigate info
+        this.tooltip.add(scene.add.sprite(0, 300, this.getUI('frame_popup').name).setAlpha(0)) // index: 5
+        this.tooltip.add(scene.add.text(0, 300, '', { font: "bold 28px Arial", fill: "#000", align: 'center' }).setOrigin(0.5).setAlpha(0)) // index: 6
     }
     showTooltip(x, y, title) {
         this.tooltip.setPosition(x, y)
@@ -208,6 +236,7 @@ class Engine {
     hideTooltip() {
         this.tooltip.setAlpha(0)
         this.hideActionTip()
+        this.hideActionMsg()
         this.hoverDisabled = false
     }
     showActionTip() {
@@ -215,5 +244,26 @@ class Engine {
     }
     hideActionTip() {
         this.tooltip.list[2].setAlpha(0)
+    }
+    showActionInfoBar(title) {
+        this.tooltip.list[3].setAlpha(1)
+        this.tooltip.list[4].setAlpha(1)
+        this.tooltip.list[4].setText(title)
+    }
+    hideActionInfoBar() {
+        this.tooltip.list[3].setAlpha(0)
+        this.tooltip.list[4].setAlpha(0)
+    }
+    showActionMsg() {
+        this.tooltip.list[5].setAlpha(1)
+        this.tooltip.list[6].setAlpha(1)
+    }
+    hideActionMsg() {
+        this.tooltip.list[5].setAlpha(0)
+        this.tooltip.list[6].setAlpha(0)
+    }
+    setInvestigateMsg(msg) {
+        this.tooltip.list[6].setText(msg)
+        this.hideActionMsg()
     }
 }
