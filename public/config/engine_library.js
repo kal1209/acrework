@@ -179,7 +179,7 @@ class Engine {
     getUI(name) {
         return this.ui.find(e => e.name == name)
     }
-    addObject(scene, x, y, item) {
+    addObject(scene, x, y, item) { // add object such as location, widget, character, etc
         let tmp = scene.add.sprite(x, y, item.name).setInteractive({
             // draggable: item.draggable,
             draggable: false,
@@ -212,7 +212,7 @@ class Engine {
         this.tooltip.add(scene.add.sprite(0, 0, this.getUI('frame_objname_gold').name)) // index: 0
         this.tooltip.add(scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5)) // index: 1
 
-        // add investigate icon
+        // add investigate circle button
         this.tooltip.add(scene.add.sprite(-60, -100, this.getUI('investigate').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
@@ -233,7 +233,7 @@ class Engine {
         this.tooltip.add(scene.add.sprite(0, 300, this.getUI('frame_popup').name).setAlpha(0)) // index: 5
         this.tooltip.add(scene.add.text(0, 300, '', { font: "bold 28px Arial", fill: "#000", align: 'center' }).setOrigin(0.5).setAlpha(0)) // index: 6
 
-        // add interact icon
+        // add interact circle button
         this.tooltip.add(scene.add.sprite(60, -100, this.getUI('interact').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
