@@ -163,6 +163,11 @@ class Engine {
                 url: 'investigate.webp',
                 depth: 10,
             },
+            {
+                name: 'interact',
+                url: 'interact.webp',
+                depth: 10,
+            }
         ]
 
         this.tooltip = undefined
@@ -208,7 +213,7 @@ class Engine {
         this.tooltip.add(scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5)) // index: 1
 
         // add investigate icon
-        this.tooltip.add(scene.add.sprite(0, -100, this.getUI('investigate').name).setAlpha(0).setInteractive({
+        this.tooltip.add(scene.add.sprite(-60, -100, this.getUI('investigate').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
@@ -227,6 +232,18 @@ class Engine {
         // add investigate info
         this.tooltip.add(scene.add.sprite(0, 300, this.getUI('frame_popup').name).setAlpha(0)) // index: 5
         this.tooltip.add(scene.add.text(0, 300, '', { font: "bold 28px Arial", fill: "#000", align: 'center' }).setOrigin(0.5).setAlpha(0)) // index: 6
+
+        // add interact icon
+        this.tooltip.add(scene.add.sprite(60, -100, this.getUI('interact').name).setAlpha(0).setInteractive({
+            useHandCursor: true,
+            pixelPerfect: true
+        }).on('pointerup', () => {
+            this.hideActionTip()
+        }).on('pointerover', () => {
+            this.showActionInfoBar('interact')
+        }).on('pointerout', () => {
+            this.hideActionInfoBar()
+        })) // index: 7
     }
     showTooltip(x, y, title) {
         this.tooltip.setPosition(x, y)
@@ -241,9 +258,11 @@ class Engine {
     }
     showActionTip() {
         this.tooltip.list[2].setAlpha(1)
+        this.tooltip.list[7].setAlpha(1)
     }
     hideActionTip() {
         this.tooltip.list[2].setAlpha(0)
+        this.tooltip.list[7].setAlpha(0)
     }
     showActionInfoBar(title) {
         this.tooltip.list[3].setAlpha(1)
