@@ -179,7 +179,7 @@ class Engine {
     getUI(name) {
         return this.ui.find(e => e.name == name)
     }
-    addItem(scene, x, y, item) {
+    addObject(scene, x, y, item) {
         let tmp = scene.add.sprite(x, y, item.name).setInteractive({
             // draggable: item.draggable,
             draggable: false,
@@ -192,7 +192,7 @@ class Engine {
             if (item.interactable) {
                 this.hoverDisabled = true
                 this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, item.title)
-                this.showActionTip()
+                this.showActionBtns()
                 this.setInvestigateMsg(item.investigate ? item.investigate.msg : '')
             } else {
                 this.hideTooltip()
@@ -217,7 +217,7 @@ class Engine {
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
-            this.hideActionTip()
+            this.hideActionBtns()
             this.showActionMsg()
         }).on('pointerover', () => {
             this.showActionInfoBar('investigate')
@@ -238,7 +238,7 @@ class Engine {
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
-            this.hideActionTip()
+            this.hideActionBtns()
         }).on('pointerover', () => {
             this.showActionInfoBar('interact')
         }).on('pointerout', () => {
@@ -252,15 +252,15 @@ class Engine {
     }
     hideTooltip() {
         this.tooltip.setAlpha(0)
-        this.hideActionTip()
+        this.hideActionBtns()
         this.hideActionMsg()
         this.hoverDisabled = false
     }
-    showActionTip() {
+    showActionBtns() { // such as investigate, interact, 
         this.tooltip.list[2].setAlpha(1)
         this.tooltip.list[7].setAlpha(1)
     }
-    hideActionTip() {
+    hideActionBtns() {
         this.tooltip.list[2].setAlpha(0)
         this.tooltip.list[7].setAlpha(0)
     }

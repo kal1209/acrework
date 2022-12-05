@@ -42,7 +42,7 @@ var EditSceneScene = new Phaser.Class({
         for (const elem of engine.items) {
             console.log(elem)
 
-            $(`div#${elem.type} div`).append(`<img src="../assets/images/${elem.type}/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="addItem(Math.random().toString(36).slice(-9), '${elem.name}', '${elem.type}', 100, 100, '${elem.depth}')">`)
+            $(`div#${elem.type} div`).append(`<img src="../assets/images/${elem.type}/${elem.url}" style="width: 100px; padding: 5px; cursor: pointer;" ondblclick="addObject(Math.random().toString(36).slice(-9), '${elem.name}', '${elem.type}', 100, 100, '${elem.depth}')">`)
         }
 
         this.loadScene()
@@ -59,7 +59,7 @@ var EditSceneScene = new Phaser.Class({
             success: async function (res) {
                 if (res.success) {
                     for (const elem of res.situation) {
-                        addItem(elem.id, elem.name, elem.type, elem.x, elem.y, elem.depth)
+                        addObject(elem.id, elem.name, elem.type, elem.x, elem.y, elem.depth)
                     }
                 }
             },
@@ -68,7 +68,7 @@ var EditSceneScene = new Phaser.Class({
             }
         });
     },
-    addItem: function (id, name, type, x, y, depth) { // add items into scene
+    addObject: function (id, name, type, x, y, depth) { // add items into scene
         let tmpSprite = this.add.sprite(x, y, name).setInteractive({
             draggable: true,
             useHandCursor: true,
@@ -94,7 +94,7 @@ var EditSceneScene = new Phaser.Class({
     },
 });
 
-function addItem(id, name, type, x, y, depth) {
+function addObject(id, name, type, x, y, depth) {
     console.log(id, name, type, x, y, depth)
-    curScene.addItem(id, name, type, x, y, depth)
+    curScene.addObject(id, name, type, x, y, depth)
 }
