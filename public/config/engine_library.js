@@ -252,16 +252,16 @@ class Engine {
     showActionBtns(action) { // such as investigate, interact, 
         console.log(action)
         if (action.investigate) {   
-            this.tooltip.list[2].setAlpha(1)
+            this.tooltip.list[2].setAlpha(1) // investigate circle button
         }
 
         if (action.interact) {
-            this.tooltip.list[7].setAlpha(1)
+            this.tooltip.list[7].setAlpha(1) // interact circle button
         }
     }
     hideActionBtns() {
-        this.tooltip.list[2].setAlpha(0)
-        this.tooltip.list[7].setAlpha(0)
+        this.tooltip.list[2].setAlpha(0) // investigate circle button
+        this.tooltip.list[7].setAlpha(0) // interact circle button
     }
     showActionInfoBar(title) {
         this.tooltip.list[3].setAlpha(1)
