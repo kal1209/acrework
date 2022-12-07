@@ -1,144 +1,135 @@
 class Engine {
     constructor() {
-        this.items = [
+        this.objects = [
             // locations
             {
                 name: 'bathroom',
                 type: 'location',
                 url: 'bathroom.webp',
-                depth: 1,
-                interactable: false,
-                draggable: false,
-
-            }, {
+            }, 
+            {
                 name: 'bedroom',
                 type: 'location',
                 url: 'bedroom.webp',
-                depth: 1,
-                interactable: false,
-                draggable: false,
-            }, {
+            }, 
+            {
                 name: 'homehall',
                 type: 'location',
                 url: 'homehall.webp',
-                depth: 1,
-                interactable: false,
-                draggable: false,
-            }, {
+            }, 
+            {
                 name: 'kitchen',
                 type: 'location',
                 url: 'kitchen.webp',
-                depth: 1,
-                interactable: false,
-                draggable: false,
             },
             // widgets
             {
                 name: 'stairs',
                 type: 'widget',
                 url: 'stairs.webp',
-                depth: 3,
-                interactable: true,
+                action: {
+                    investigate: {
+                        msg: "These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."
+                    },
+                    interact: {}
+                },
                 title: 'Stairs',
-                draggable: true,
-                investigate: {
-                    msg: "These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."
-                }
-            },
+            }, 
             {
                 name: 'door',
                 type: 'widget',
                 url: 'door.webp',
-                depth: 2,
-                interactable: true,
+                action: {
+                    interact: {}
+                },
                 title: 'Door',
-                draggable: true,
+            }, 
+            {
+                name: 'barstool_1',
+                type: 'widget',
+                url: 'barstool_1.webp',
             },
             {
                 name: 'counter',
                 type: 'widget',
                 url: 'counter.webp',
-                depth: 2,
-                interactable: false,
-                draggable: true,
             },
             {
                 name: 'mf',
                 type: 'widget',
                 url: 'mf.webp',
-                depth: 2,
-                interactable: true,
+                action: {
+                    interact: {}
+                },
                 title: 'Mini Fridge',
-                draggable: true,
             },
             {
                 name: 'clock',
                 type: 'widget',
                 url: 'clock.webp',
-                depth: 2,
-                interactable: false,
-                draggable: true,
             },
             {
 
                 name: 'closet',
                 type: 'widget',
                 url: 'closet.webp',
-                depth: 2,
-                interactable: false,
-                draggable: true,
             },
             {
                 name: 'furniture_03',
                 type: 'widget',
                 url: 'furniture_03.webp',
-                depth: 2,
-                interactable: false,
-                draggable: true,
             },
             {
                 name: 'furniture_01',
                 type: 'widget',
                 url: 'furniture_01.webp',
-                depth: 2,
-                interactable: false,
-                draggable: true,
             },
             {
                 name: 'd1',
                 type: 'widget',
                 url: 'd1.webp',
-                depth: 2,
-                interactable: true,
+                action: {
+                    interact: {}
+                },
                 title: 'Drawer',
-                draggable: true,
             },
             {
                 name: 'd3',
                 type: 'widget',
                 url: 'd3.webp',
-                depth: 2,
-                interactable: true,
+                action: {
+                    interact: {}
+                },
                 title: 'Drawer',
-                draggable: true,
             },
             {
                 name: 'd2',
                 type: 'widget',
                 url: 'd2.webp',
-                depth: 2,
-                interactable: true,
+                action: {
+                    interact: {}
+                },
                 title: 'Drawer',
-                draggable: true,
             },
             {
                 name: 's1',
                 type: 'widget',
                 url: 's1.webp',
-                depth: 2,
-                interactable: true,
+                action: {
+                    interact: {}
+                },
                 title: 'Shelf',
-                draggable: true,
+            },
+            {
+                name: 'jo',
+                type: 'character',
+                url: 'jo.webp',
+                action: {
+                    talk: {},
+                    quest: {},
+                    flirt: {},
+                },
+                title: 'Jo',
             },
         ]
 
@@ -173,33 +164,33 @@ class Engine {
         this.tooltip = undefined
         this.hoverDisabled = false
     }
-    getItem(name) {
-        return this.items.find(e => e.name == name)
+    getObject(name) {
+        return this.objects.find(e => e.name == name)
     }
     getUI(name) {
         return this.ui.find(e => e.name == name)
     }
-    addObject(scene, x, y, item) { // add object such as location, widget, character, etc
-        let tmp = scene.add.sprite(x, y, item.name).setInteractive({
-            // draggable: item.draggable,
+    addObject(scene, x, y, obj, depth) { // add object such as location, widget, character, etc
+        let tmp = scene.add.sprite(x, y, obj.name).setInteractive({
+            // draggable: obj.draggable
             draggable: false,
-            useHandCursor: item.interactable,
+            useHandCursor: obj.action ? true : false,
             pixelPerfect: true
-        }).setOrigin(0, 0).setDepth(item.depth).on('drag', function (pointer, dragX, dragY) {
+        }).setOrigin(0, 0).setDepth(depth).on('drag', function (pointer, dragX, dragY) {
             this.setPosition(dragX, dragY);
-            console.log([item.name, dragX, dragY])
+            console.log([obj.name, dragX, dragY])
         }).on('pointerup', () => {
-            if (item.interactable) {
+            if (obj.action) {
                 this.hoverDisabled = true
-                this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, item.title)
-                this.showActionBtns()
-                this.setInvestigateMsg(item.investigate ? item.investigate.msg : '')
+                this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
+                this.showActionBtns(obj.action)
+                this.setInvestigateMsg(obj.action.investigate ? obj.action.investigate.msg : '')
             } else {
                 this.hideTooltip()
             }
         }).on('pointerover', () => {
-            if (item.interactable && !this.hoverDisabled) {
-                this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, item.title)
+            if (obj.action && !this.hoverDisabled) {
+                this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
             }
         }).on('pointerout', () => {
             if (!this.hoverDisabled) {
@@ -209,6 +200,7 @@ class Engine {
     }
     initTooltip(scene) {
         this.tooltip = scene.add.container(100, 100).setDepth(10).setAlpha(0)
+
         this.tooltip.add(scene.add.sprite(0, 0, this.getUI('frame_objname_gold').name)) // index: 0
         this.tooltip.add(scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5)) // index: 1
 
@@ -218,7 +210,8 @@ class Engine {
             pixelPerfect: true
         }).on('pointerup', () => {
             this.hideActionBtns()
-            this.showActionMsg()
+            this.showInvestigateMsg()
+            this.hideActionInfoBar()
         }).on('pointerover', () => {
             this.showActionInfoBar('investigate')
         }).on('pointerout', () => {
@@ -253,12 +246,18 @@ class Engine {
     hideTooltip() {
         this.tooltip.setAlpha(0)
         this.hideActionBtns()
-        this.hideActionMsg()
+        this.hideInvestigateMsg()
         this.hoverDisabled = false
     }
-    showActionBtns() { // such as investigate, interact, 
-        this.tooltip.list[2].setAlpha(1)
-        this.tooltip.list[7].setAlpha(1)
+    showActionBtns(action) { // such as investigate, interact, 
+        console.log(action)
+        if (action.investigate) {   
+            this.tooltip.list[2].setAlpha(1)
+        }
+
+        if (action.interact) {
+            this.tooltip.list[7].setAlpha(1)
+        }
     }
     hideActionBtns() {
         this.tooltip.list[2].setAlpha(0)
@@ -273,16 +272,16 @@ class Engine {
         this.tooltip.list[3].setAlpha(0)
         this.tooltip.list[4].setAlpha(0)
     }
-    showActionMsg() {
+    showInvestigateMsg() {
         this.tooltip.list[5].setAlpha(1)
         this.tooltip.list[6].setAlpha(1)
     }
-    hideActionMsg() {
+    hideInvestigateMsg() {
         this.tooltip.list[5].setAlpha(0)
         this.tooltip.list[6].setAlpha(0)
     }
     setInvestigateMsg(msg) {
         this.tooltip.list[6].setText(msg)
-        this.hideActionMsg()
+        this.hideInvestigateMsg()
     }
 }
