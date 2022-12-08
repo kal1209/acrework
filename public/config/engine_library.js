@@ -22,28 +22,36 @@ class Engine {
                 type: 'location',
                 url: 'kitchen.webp',
             },
-            // widgets
+            // gate
             {
                 name: 'stairs',
-                type: 'widget',
+                type: 'gate',
                 url: 'stairs.webp',
                 actions: {
                     investigate: {
                         msg: "These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."
                     },
-                    interact: {}
+                    go: {
+                        dir: 'Upstairs'
+                    }
                 },
                 title: 'Stairs',
             },
             {
                 name: 'door',
-                type: 'widget',
+                type: 'gate',
                 url: 'door.webp',
                 actions: {
-                    interact: {}
+                    investigate: {
+                        msg: "The door to the outside to the world.\nLet's just say we are not on good\nterms."
+                    },
+                    go: {
+                        dir: 'Outside'
+                    }
                 },
                 title: 'Door',
             },
+            // widgets
             {
                 name: 'barstool_1',
                 type: 'widget',
@@ -173,11 +181,18 @@ class Engine {
                 name: 'flirt',
                 url: 'flirt.webp',
                 depth: 10,
+            },
+            {
+                name: 'go',
+                url: 'go.webp',
+                depth: 10,
             }
         ]
 
         this.tooltip = undefined
         this.hoverDisabled = false
+
+        this.seletedObj = undefined
     }
     getObject(name) {
         return this.objects.find(e => e.name == name)
@@ -196,6 +211,8 @@ class Engine {
             console.log([obj.name, dragX, dragY])
         }).on('pointerup', () => {
             if (obj.actions) {
+                this.seletedObj = obj
+
                 this.hoverDisabled = true
                 this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
                 this.showActionBtns(obj.actions)
@@ -228,7 +245,7 @@ class Engine {
             this.showInvestigateMsg()
             this.hideActionInfoBar()
         }).on('pointerover', () => {
-            this.showActionInfoBar('investigate')
+            this.showActionInfoBar('Investigate')
         }).on('pointerout', () => {
             this.hideActionInfoBar()
         })) // index: 2
@@ -248,7 +265,7 @@ class Engine {
         }).on('pointerup', () => {
             this.hideActionBtns()
         }).on('pointerover', () => {
-            this.showActionInfoBar('interact')
+            this.showActionInfoBar('Interact')
         }).on('pointerout', () => {
             this.hideActionInfoBar()
         })) // index: 7
@@ -260,7 +277,7 @@ class Engine {
         }).on('pointerup', () => {
             this.hideActionBtns()
         }).on('pointerover', () => {
-            this.showActionInfoBar('talk')
+            this.showActionInfoBar('Talk')
         }).on('pointerout', () => {
             this.hideActionInfoBar()
         })) // index: 8
@@ -272,7 +289,7 @@ class Engine {
         }).on('pointerup', () => {
             this.hideActionBtns()
         }).on('pointerover', () => {
-            this.showActionInfoBar('quest')
+            this.showActionInfoBar('Quest')
         }).on('pointerout', () => {
             this.hideActionInfoBar()
         })) // index: 9
@@ -284,10 +301,24 @@ class Engine {
         }).on('pointerup', () => {
             this.hideActionBtns()
         }).on('pointerover', () => {
-            this.showActionInfoBar('flirt')
+            this.showActionInfoBar('Flirt')
         }).on('pointerout', () => {
             this.hideActionInfoBar()
         })) // index: 10
+
+        // add go circle button
+        this.tooltip.add(scene.add.sprite(115, -100, this.getUI('go').name).setAlpha(0).setInteractive({
+            useHandCursor: true,
+            pixelPerfect: true
+        }).on('pointerup', () => {
+            this.hideActionBtns()
+        }).on('pointerover', () => {
+            if (this.seletedObj.type == 'gate') {
+                this.showActionInfoBar(this.seletedObj.actions.go.dir)
+            }
+        }).on('pointerout', () => {
+            this.hideActionInfoBar()
+        })) // index: 11
     }
     showTooltip(x, y, title) {
         this.tooltip.setPosition(x, y)
@@ -309,6 +340,7 @@ class Engine {
             talk: 8,
             quest: 9,
             flirt: 10,
+            go: 11,
         }
 
         const pos = {
@@ -330,6 +362,7 @@ class Engine {
         this.tooltip.list[8].setAlpha(0) // talk circle button
         this.tooltip.list[9].setAlpha(0) // quest circle button
         this.tooltip.list[10].setAlpha(0) // flirt circle button
+        this.tooltip.list[11].setAlpha(0) // go circle button
     }
     showActionInfoBar(title) {
         this.tooltip.list[3].setAlpha(1)
