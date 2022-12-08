@@ -194,10 +194,10 @@ class Engine {
 
         this.seletedObj = undefined
     }
-    getObject(name) {
+    getObject(name) { // get object info by name
         return this.objects.find(e => e.name == name)
     }
-    getUI(name) {
+    getUI(name) { // get ui
         return this.ui.find(e => e.name == name)
     }
     addObject(scene, x, y, obj, depth) { // add object such as location, widget, character, etc
