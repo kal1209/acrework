@@ -6,17 +6,17 @@ class Engine {
                 name: 'bathroom',
                 type: 'location',
                 url: 'bathroom.webp',
-            }, 
+            },
             {
                 name: 'bedroom',
                 type: 'location',
                 url: 'bedroom.webp',
-            }, 
+            },
             {
                 name: 'homehall',
                 type: 'location',
                 url: 'homehall.webp',
-            }, 
+            },
             {
                 name: 'kitchen',
                 type: 'location',
@@ -27,23 +27,23 @@ class Engine {
                 name: 'stairs',
                 type: 'widget',
                 url: 'stairs.webp',
-                action: {
+                actions: {
                     investigate: {
                         msg: "These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."
                     },
                     interact: {}
                 },
                 title: 'Stairs',
-            }, 
+            },
             {
                 name: 'door',
                 type: 'widget',
                 url: 'door.webp',
-                action: {
+                actions: {
                     interact: {}
                 },
                 title: 'Door',
-            }, 
+            },
             {
                 name: 'barstool_1',
                 type: 'widget',
@@ -58,7 +58,7 @@ class Engine {
                 name: 'mf',
                 type: 'widget',
                 url: 'mf.webp',
-                action: {
+                actions: {
                     interact: {}
                 },
                 title: 'Mini Fridge',
@@ -88,7 +88,7 @@ class Engine {
                 name: 'd1',
                 type: 'widget',
                 url: 'd1.webp',
-                action: {
+                actions: {
                     interact: {}
                 },
                 title: 'Drawer',
@@ -97,7 +97,7 @@ class Engine {
                 name: 'd3',
                 type: 'widget',
                 url: 'd3.webp',
-                action: {
+                actions: {
                     interact: {}
                 },
                 title: 'Drawer',
@@ -106,7 +106,7 @@ class Engine {
                 name: 'd2',
                 type: 'widget',
                 url: 'd2.webp',
-                action: {
+                actions: {
                     interact: {}
                 },
                 title: 'Drawer',
@@ -115,7 +115,7 @@ class Engine {
                 name: 's1',
                 type: 'widget',
                 url: 's1.webp',
-                action: {
+                actions: {
                     interact: {}
                 },
                 title: 'Shelf',
@@ -124,7 +124,7 @@ class Engine {
                 name: 'jo',
                 type: 'character',
                 url: 'jo.webp',
-                action: {
+                actions: {
                     talk: {},
                     quest: {},
                     flirt: {},
@@ -158,6 +158,21 @@ class Engine {
                 name: 'interact',
                 url: 'interact.webp',
                 depth: 10,
+            },
+            {
+                name: 'talk',
+                url: 'talk.webp',
+                depth: 10,
+            },
+            {
+                name: 'quest',
+                url: 'quest.webp',
+                depth: 10,
+            },
+            {
+                name: 'flirt',
+                url: 'flirt.webp',
+                depth: 10,
             }
         ]
 
@@ -174,22 +189,22 @@ class Engine {
         let tmp = scene.add.sprite(x, y, obj.name).setInteractive({
             // draggable: obj.draggable
             draggable: false,
-            useHandCursor: obj.action ? true : false,
+            useHandCursor: obj.actions ? true : false,
             pixelPerfect: true
         }).setOrigin(0, 0).setDepth(depth).on('drag', function (pointer, dragX, dragY) {
             this.setPosition(dragX, dragY);
             console.log([obj.name, dragX, dragY])
         }).on('pointerup', () => {
-            if (obj.action) {
+            if (obj.actions) {
                 this.hoverDisabled = true
                 this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
-                this.showActionBtns(obj.action)
-                this.setInvestigateMsg(obj.action.investigate ? obj.action.investigate.msg : '')
+                this.showActionBtns(obj.actions)
+                this.setInvestigateMsg(obj.actions.investigate ? obj.actions.investigate.msg : '')
             } else {
                 this.hideTooltip()
             }
         }).on('pointerover', () => {
-            if (obj.action && !this.hoverDisabled) {
+            if (obj.actions && !this.hoverDisabled) {
                 this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
             }
         }).on('pointerout', () => {
@@ -218,7 +233,7 @@ class Engine {
             this.hideActionInfoBar()
         })) // index: 2
 
-        // add action info bar
+        // add actions info bar
         this.tooltip.add(scene.add.sprite(0, 80, this.getUI('frame_int_text').name).setAlpha(0)) // index: 3
         this.tooltip.add(scene.add.text(0, 80, '', { font: "bold 28px Arial ", fill: "#000" }).setOrigin(0.5).setAlpha(0)) // index: 4
 
@@ -237,6 +252,24 @@ class Engine {
         }).on('pointerout', () => {
             this.hideActionInfoBar()
         })) // index: 7
+
+        // add talk circle button
+        this.tooltip.add(scene.add.sprite(-115, -100, this.getUI('talk').name).setAlpha(0).setInteractive({
+            useHandCursor: true,
+            pixelPerfect: true
+        })) // index: 8
+
+        // add quest circle button
+        this.tooltip.add(scene.add.sprite(0, -130, this.getUI('quest').name).setAlpha(0).setInteractive({
+            useHandCursor: true,
+            pixelPerfect: true
+        })) // index: 9
+
+        // add flirt circle button
+        this.tooltip.add(scene.add.sprite(115, -100, this.getUI('flirt').name).setAlpha(0).setInteractive({
+            useHandCursor: true,
+            pixelPerfect: true
+        })) // index: 10
     }
     showTooltip(x, y, title) {
         this.tooltip.setPosition(x, y)
@@ -249,19 +282,36 @@ class Engine {
         this.hideInvestigateMsg()
         this.hoverDisabled = false
     }
-    showActionBtns(action) { // such as investigate, interact, 
-        console.log(action)
-        if (action.investigate) {   
-            this.tooltip.list[2].setAlpha(1) // investigate circle button
+    showActionBtns(actions) { // such as investigate, interact,
+        const len = Object.keys(actions).length
+        
+        const idx = {
+            investigate: 2,
+            interact: 7,
+            talk: 8,
+            quest: 9,
+            flirt: 10,
         }
 
-        if (action.interact) {
-            this.tooltip.list[7].setAlpha(1) // interact circle button
+        const pos = {
+            1: [[0, -100]],
+            2: [[-60, -100], [60, -100]],
+            3: [[-110, -100], [0, -130], [110, -100]]
+        }
+
+        this.hideActionBtns()
+
+        for (const [i, val] of Object.keys(actions).entries()) {
+            this.tooltip.list[idx[val]].setAlpha(1)
+            this.tooltip.list[idx[val]].setPosition(pos[len][i][0], pos[len][i][1])
         }
     }
     hideActionBtns() {
         this.tooltip.list[2].setAlpha(0) // investigate circle button
         this.tooltip.list[7].setAlpha(0) // interact circle button
+        this.tooltip.list[8].setAlpha(0) // talk circle button
+        this.tooltip.list[9].setAlpha(0) // quest circle button
+        this.tooltip.list[10].setAlpha(0) // flirt circle button
     }
     showActionInfoBar(title) {
         this.tooltip.list[3].setAlpha(1)
