@@ -257,18 +257,36 @@ class Engine {
         this.tooltip.add(scene.add.sprite(-115, -100, this.getUI('talk').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
+        }).on('pointerup', () => {
+            this.hideActionBtns()
+        }).on('pointerover', () => {
+            this.showActionInfoBar('talk')
+        }).on('pointerout', () => {
+            this.hideActionInfoBar()
         })) // index: 8
 
         // add quest circle button
         this.tooltip.add(scene.add.sprite(0, -130, this.getUI('quest').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
+        }).on('pointerup', () => {
+            this.hideActionBtns()
+        }).on('pointerover', () => {
+            this.showActionInfoBar('quest')
+        }).on('pointerout', () => {
+            this.hideActionInfoBar()
         })) // index: 9
 
         // add flirt circle button
         this.tooltip.add(scene.add.sprite(115, -100, this.getUI('flirt').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
+        }).on('pointerup', () => {
+            this.hideActionBtns()
+        }).on('pointerover', () => {
+            this.showActionInfoBar('flirt')
+        }).on('pointerout', () => {
+            this.hideActionInfoBar()
         })) // index: 10
     }
     showTooltip(x, y, title) {
@@ -284,7 +302,7 @@ class Engine {
     }
     showActionBtns(actions) { // such as investigate, interact,
         const len = Object.keys(actions).length
-        
+
         const idx = {
             investigate: 2,
             interact: 7,
