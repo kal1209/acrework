@@ -1,12 +1,20 @@
-var TestEntranceScene = new Phaser.Class({
+var EntranceScene = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize: function () {
-        Phaser.Scene.call(this, { "key": "TestEntranceScene" });
+        Phaser.Scene.call(this, { "key": "EntranceScene" });
     },
     init: function () {
         this.engine = new Engine();
 
         this.objects = [
+            {
+                name: 'school',
+                pos: {
+                    x: 0,
+                    y: 0
+                },
+                depth: 1
+            },
         ]
     },
     preload: function () {
@@ -25,7 +33,13 @@ var TestEntranceScene = new Phaser.Class({
         this.engine.init(this)
 
         for (const elem of this.objects) {
-            this.engine.addObject(this, elem.pos, this.engine.getObject(elem.name), elem.depth)
+            this.engine.addObject(
+                this, 
+                elem.pos, 
+                this.engine.getObject(elem.name), 
+                elem.depth, 
+                elem.dir ? elem.dir : ''
+            )
         }
     },
 });

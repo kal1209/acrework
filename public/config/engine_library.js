@@ -7,6 +7,11 @@ class Engine {
                 type: 'location',
                 url: 'home/kitchen/kitchen.webp',
             },
+            {
+                name: 'school',
+                type: 'location',
+                url: 'school/entrance/school.webp',
+            },
             // gate
             {
                 name: 'stairs',
@@ -225,7 +230,9 @@ class Engine {
     getUI(name) { // get ui
         return this.ui.find(e => e.name == name)
     }
-    addObject(scene, pos, obj, depth) { // add object such as location, widget, character, etc
+    addObject(scene, pos, obj, depth, dir) { // add object such as location, widget, character, etc
+        if (dir != '') obj.actions.go.dir = dir
+
         let tmp = scene.add.sprite(pos.x, pos.y, obj.name).setInteractive({
             // draggable: obj.draggable
             draggable: false,
@@ -342,6 +349,7 @@ class Engine {
             pixelPerfect: true
         }).on('pointerup', () => {
             this.hideActionBtns()
+            if (this.seletedObj.actions.go.dir != '') scene.scene.start(this.seletedObj.actions.go.dir)
         }).on('pointerover', () => {
             if (this.seletedObj.type == 'gate') {
                 this.showActionInfoBar(this.seletedObj.actions.go.dirName)

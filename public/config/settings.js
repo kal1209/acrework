@@ -22,6 +22,7 @@ var config = {
     },
     scene: [
         KitchenScene,
+        EntranceScene
     ]
 };
 

@@ -29,7 +29,8 @@ var KitchenScene = new Phaser.Class({
                     x: 175,
                     y: 196
                 },
-                depth: 2
+                depth: 2,
+                dir: 'EntranceScene'
             },
             {
                 name: 'closet',
@@ -153,7 +154,13 @@ var KitchenScene = new Phaser.Class({
         this.engine.init(this)
 
         for (const elem of this.objects) {
-            this.engine.addObject(this, elem.pos, this.engine.getObject(elem.name), elem.depth)
+            this.engine.addObject(
+                this, 
+                elem.pos, 
+                this.engine.getObject(elem.name), 
+                elem.depth, 
+                elem.dir ? elem.dir : ''
+            )
         }
     },
 });
