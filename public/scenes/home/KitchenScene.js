@@ -141,13 +141,13 @@ var KitchenScene = new Phaser.Class({
     preload: function () {
         // load the ui
         for (const elem of this.engine.ui) {
-            this.load.image(`${elem.name}`, `../assets/images/ui/${elem.url}`)
+            this.load.image(`${elem.name}`, `../engine/assets/ui/${elem.url}`)
         }
 
         // load the objects
         for (const elem of this.objects) {
             const e = this.engine.getObject(elem.name)
-            this.load.image(`${e.name}`, `../assets/images/location/${e.url}`)
+            this.load.image(`${e.name}`, `../engine/assets/location/${e.url}`)
         }
     },
     create: async function () {
