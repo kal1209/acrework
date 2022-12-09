@@ -17,7 +17,7 @@ class Engine {
                         msgs: ["These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."]
                     },
                     go: {
-                        dir: 'Upstairs'
+                        dirName: 'Upstairs'
                     }
                 },
                 title: 'Stairs',
@@ -31,7 +31,7 @@ class Engine {
                         msgs: ["The door to the outside to the world.\nLet's just say we are not on good\nterms."]
                     },
                     go: {
-                        dir: 'Outside'
+                        dirName: 'Outside'
                     }
                 },
                 title: 'Door',
@@ -344,7 +344,7 @@ class Engine {
             this.hideActionBtns()
         }).on('pointerover', () => {
             if (this.seletedObj.type == 'gate') {
-                this.showActionInfoBar(this.seletedObj.actions.go.dir)
+                this.showActionInfoBar(this.seletedObj.actions.go.dirName)
             }
         }).on('pointerout', () => {
             this.hideActionInfoBar()

@@ -1,7 +1,7 @@
-var TestKitchenScene = new Phaser.Class({
+var KitchenScene = new Phaser.Class({
     Extends: Phaser.Scene,
     initialize: function () {
-        Phaser.Scene.call(this, { "key": "TestKitchenScene" });
+        Phaser.Scene.call(this, { "key": "KitchenScene" });
     },
     init: function () {
         this.engine = new Engine();

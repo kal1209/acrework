@@ -15,39 +15,9 @@
 
     <script src="../config/engine_library.js"></script>
     
-    <script src="../scenes/testKitchenScene.js"></script>
+    <script src="../scenes/home/KitchenScene.js"></script>
 
-    <script type="text/javascript">
-        var config = {
-            type: Phaser.AUTO,
-            scale: {
-                mode: Phaser.Scale.FIT,
-                autoCenter: Phaser.Scale.CENTER_BOTH,
-            },
-            width: 1920,
-            height: 1080,
-            loader: {
-                crossOrigin: 'anonymous'
-            },
-            physics: {
-                default: 'arcade',
-                arcade: {
-                    // debug: true,
-                    // debugShowBody: true
-                }
-            },
-            parent: 'phaser',
-            dom: {
-                createContainer: true
-            },
-            scene: [
-                TestKitchenScene,
-            ]
-        };
-
-        var game = new Phaser.Game(config);
-        game.scene.start("TestKitchenScene");
-    </script>
+    <script src="../config/settings.js"></script>
 </body>
 
 </html>
