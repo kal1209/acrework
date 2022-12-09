@@ -3,30 +3,15 @@ class Engine {
         this.objects = [
             // locations
             {
-                name: 'bathroom',
-                type: 'location',
-                url: 'bathroom.webp',
-            },
-            {
-                name: 'bedroom',
-                type: 'location',
-                url: 'bedroom.webp',
-            },
-            {
-                name: 'homehall',
-                type: 'location',
-                url: 'homehall.webp',
-            },
-            {
                 name: 'kitchen',
                 type: 'location',
-                url: 'kitchen.webp',
+                url: 'home/kitchen/kitchen.webp',
             },
             // gate
             {
                 name: 'stairs',
                 type: 'gate',
-                url: 'stairs.webp',
+                url: 'home/kitchen/stairs.webp',
                 actions: {
                     investigate: {
                         msgs: ["These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."]
@@ -40,7 +25,7 @@ class Engine {
             {
                 name: 'door',
                 type: 'gate',
-                url: 'door.webp',
+                url: 'home/kitchen/door.webp',
                 actions: {
                     investigate: {
                         msgs: ["The door to the outside to the world.\nLet's just say we are not on good\nterms."]
@@ -55,17 +40,17 @@ class Engine {
             {
                 name: 'barstool_1',
                 type: 'widget',
-                url: 'barstool_1.webp',
+                url: 'home/kitchen/barstool_1.webp',
             },
             {
                 name: 'counter',
                 type: 'widget',
-                url: 'counter.webp',
+                url: 'home/kitchen/counter.webp',
             },
             {
                 name: 'mf',
                 type: 'widget',
-                url: 'mf.webp',
+                url: 'home/kitchen/mf.webp',
                 actions: {
                     interact: {
                         msgs: [
@@ -80,28 +65,28 @@ class Engine {
             {
                 name: 'clock',
                 type: 'widget',
-                url: 'clock.webp',
+                url: 'home/kitchen/clock.webp',
             },
             {
 
                 name: 'closet',
                 type: 'widget',
-                url: 'closet.webp',
+                url: 'home/kitchen/closet.webp',
             },
             {
                 name: 'furniture_03',
                 type: 'widget',
-                url: 'furniture_03.webp',
+                url: 'home/kitchen/furniture_03.webp',
             },
             {
                 name: 'furniture_01',
                 type: 'widget',
-                url: 'furniture_01.webp',
+                url: 'home/kitchen/furniture_01.webp',
             },
             {
                 name: 'd1',
                 type: 'widget',
-                url: 'd1.webp',
+                url: 'home/kitchen/d1.webp',
                 actions: {
                     interact: {
                         msgs: [
@@ -116,7 +101,7 @@ class Engine {
             {
                 name: 'd3',
                 type: 'widget',
-                url: 'd3.webp',
+                url: 'home/kitchen/d3.webp',
                 actions: {
                     interact: {
                         msgs: [
@@ -131,7 +116,7 @@ class Engine {
             {
                 name: 'd2',
                 type: 'widget',
-                url: 'd2.webp',
+                url: 'home/kitchen/d2.webp',
                 actions: {
                     interact: {
                         msgs: [
@@ -146,7 +131,7 @@ class Engine {
             {
                 name: 's1',
                 type: 'widget',
-                url: 's1.webp',
+                url: 'home/kitchen/s1.webp',
                 actions: {
                     interact: {
                         msgs: [
@@ -161,7 +146,7 @@ class Engine {
             {
                 name: 'jo',
                 type: 'character',
-                url: 'jo.webp',
+                url: 'home/kitchen/jo.webp',
                 actions: {
                     talk: {},
                     quest: {},

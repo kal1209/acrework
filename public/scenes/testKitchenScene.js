@@ -146,7 +146,7 @@ var TestKitchenScene = new Phaser.Class({
         // load the objects
         for (const elem of this.objects) {
             const e = this.engine.getObject(elem.name)
-            this.load.image(`${e.name}`, `../assets/images/${e.type}/${e.url}`)
+            this.load.image(`${e.name}`, `../assets/images/location/${e.url}`)
         }
     },
     create: async function () {
