@@ -150,7 +150,7 @@ var TestKitchenScene = new Phaser.Class({
         }
     },
     create: async function () {
-        this.engine.initTooltip(this)
+        this.engine.init(this)
 
         for (const elem of this.objects) {
             this.engine.addObject(this, elem.pos, this.engine.getObject(elem.name), elem.depth)

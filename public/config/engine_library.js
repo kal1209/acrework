@@ -29,7 +29,7 @@ class Engine {
                 url: 'stairs.webp',
                 actions: {
                     investigate: {
-                        msg: "These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."
+                        msgs: ["These steps creak so badly.\nThey make midnight-raids on the\nkitchen almost impossible."]
                     },
                     go: {
                         dir: 'Upstairs'
@@ -43,7 +43,7 @@ class Engine {
                 url: 'door.webp',
                 actions: {
                     investigate: {
-                        msg: "The door to the outside to the world.\nLet's just say we are not on good\nterms."
+                        msgs: ["The door to the outside to the world.\nLet's just say we are not on good\nterms."]
                     },
                     go: {
                         dir: 'Outside'
@@ -67,7 +67,13 @@ class Engine {
                 type: 'widget',
                 url: 'mf.webp',
                 actions: {
-                    interact: {}
+                    interact: {
+                        msgs: [
+                            "This is widget",
+                            "Touch it",
+                            "And touch it again"
+                        ]
+                    }
                 },
                 title: 'Mini Fridge',
             },
@@ -97,7 +103,13 @@ class Engine {
                 type: 'widget',
                 url: 'd1.webp',
                 actions: {
-                    interact: {}
+                    interact: {
+                        msgs: [
+                            "This is widget",
+                            "Touch it",
+                            "And touch it again"
+                        ]
+                    }
                 },
                 title: 'Drawer',
             },
@@ -106,7 +118,13 @@ class Engine {
                 type: 'widget',
                 url: 'd3.webp',
                 actions: {
-                    interact: {}
+                    interact: {
+                        msgs: [
+                            "This is widget",
+                            "Touch it",
+                            "And touch it again"
+                        ]
+                    }
                 },
                 title: 'Drawer',
             },
@@ -115,7 +133,13 @@ class Engine {
                 type: 'widget',
                 url: 'd2.webp',
                 actions: {
-                    interact: {}
+                    interact: {
+                        msgs: [
+                            "This is widget",
+                            "Touch it",
+                            "And touch it again"
+                        ]
+                    }
                 },
                 title: 'Drawer',
             },
@@ -124,7 +148,13 @@ class Engine {
                 type: 'widget',
                 url: 's1.webp',
                 actions: {
-                    interact: {}
+                    interact: {
+                        msgs: [
+                            "This is widget",
+                            "Touch it",
+                            "And touch it again"
+                        ]
+                    }
                 },
                 title: 'Shelf',
             },
@@ -142,6 +172,11 @@ class Engine {
         ]
 
         this.ui = [
+            {
+                name: 'lock_bg',
+                url: 'lock_bg.png',
+                depth: 100,
+            },
             {
                 name: 'frame_objname_gold',
                 url: 'frame_objname_gold.webp',
@@ -193,6 +228,11 @@ class Engine {
         this.hoverDisabled = false
 
         this.seletedObj = undefined
+        this.explainMode = {
+            status: false,
+            msgs: [],
+            step: 0
+        }
     }
     getObject(name) { // get object info by name
         return this.objects.find(e => e.name == name)
@@ -216,7 +256,7 @@ class Engine {
                 this.hoverDisabled = true
                 this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
                 this.showActionBtns(obj.actions)
-                this.setInvestigateMsg(obj.actions.investigate ? obj.actions.investigate.msg : '')
+                this.setInvestigateMsg(obj.actions.investigate ? obj.actions.investigate.msgs[0] : '')
             } else {
                 this.hideTooltip()
             }
@@ -229,6 +269,10 @@ class Engine {
                 this.hideTooltip()
             }
         })
+    }
+    init(scene) {
+        this.initTooltip(scene);
+        this.initStoryExplainBar(scene);
     }
     initTooltip(scene) {
         this.tooltip = scene.add.container(100, 100).setDepth(10).setAlpha(0)
@@ -263,7 +307,8 @@ class Engine {
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
-            this.hideActionBtns()
+            this.hideTooltip()
+            this.showStoryExplainBar(this.seletedObj.actions.interact ? this.seletedObj.actions.interact.msgs : '')
         }).on('pointerover', () => {
             this.showActionInfoBar('Interact')
         }).on('pointerout', () => {
@@ -330,6 +375,36 @@ class Engine {
         this.hideActionBtns()
         this.hideInvestigateMsg()
         this.hoverDisabled = false
+    }
+    initStoryExplainBar(scene) {
+        this.explainMode.status = false
+        this.storyExplainContainer = scene.add.container(0, 0).setDepth(10).setAlpha(0)
+        this.storyExplainContainer.add(scene.add.sprite(0, 0, this.getUI('lock_bg').name).setOrigin(0).setInteractive({
+            pixelPerfect: false
+        }).on('pointerup', () => {
+            this.explainMode.step++;
+            if (this.explainMode.step >= this.explainMode.msgs.length) {
+                this.hideStoryExplainBar()
+            } else {
+                this.storyExplainContainer.list[1].setText(this.explainMode.msgs[this.explainMode.step])
+            }
+        }).on('pointerover', () => {
+        }).on('pointerout', () => {
+        }))
+
+        this.storyExplainContainer.add(scene.add.text(scene.sys.game.canvas.width/2, scene.sys.game.canvas.height - 100, '', { font: "bold 48px Arial", fill: "#000" }).setOrigin(0.5))
+    }
+    showStoryExplainBar(msgs) {
+        this.explainMode.status = true
+        this.explainMode.step = 0
+        this.explainMode.msgs = msgs
+
+        this.storyExplainContainer.setAlpha(1)
+        this.storyExplainContainer.list[1].setText(this.explainMode.msgs[this.explainMode.step])
+    }
+    hideStoryExplainBar() {
+        this.explainMode.status = false
+        this.storyExplainContainer.setAlpha(0)
     }
     showActionBtns(actions) { // such as investigate, interact,
         const len = Object.keys(actions).length
