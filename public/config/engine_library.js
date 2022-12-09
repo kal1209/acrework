@@ -200,8 +200,8 @@ class Engine {
     getUI(name) { // get ui
         return this.ui.find(e => e.name == name)
     }
-    addObject(scene, x, y, obj, depth) { // add object such as location, widget, character, etc
-        let tmp = scene.add.sprite(x, y, obj.name).setInteractive({
+    addObject(scene, pos, obj, depth) { // add object such as location, widget, character, etc
+        let tmp = scene.add.sprite(pos.x, pos.y, obj.name).setInteractive({
             // draggable: obj.draggable
             draggable: false,
             useHandCursor: obj.actions ? true : false,

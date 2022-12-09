@@ -5,54 +5,155 @@ var TestKitchenScene = new Phaser.Class({
     },
     init: function () {
         this.engine = new Engine();
+
+        this.objects = [
+            {
+                name: 'kitchen',
+                pos: {
+                    x: 0,
+                    y: 0
+                },
+                depth: 1
+            },
+            {
+                name: 'stairs',
+                pos: {
+                    x: 0,
+                    y: 0
+                },
+                depth: 3
+            },
+            {
+                name: 'door',
+                pos: {
+                    x: 175,
+                    y: 196
+                },
+                depth: 2
+            },
+            {
+                name: 'closet',
+                pos: {
+                    x: 1425,
+                    y:  182
+                },
+                depth: 2
+            },
+            {
+                name: 'clock',
+                pos: {
+                    x: 614,
+                    y:  260
+                },
+                depth: 2
+            },
+            {
+                name: 'furniture_01',
+                pos: {
+                    x: 367,
+                    y: 225
+                },
+                depth: 2
+            },
+            {
+                name: 'furniture_03',
+                pos: {
+                    x: 1028,
+                    y: 524
+                },
+                depth: 2
+            },
+            {
+                name: 'd1',
+                pos: {
+                    x: 1589,
+                    y: 682
+                },
+                depth: 2
+            },
+            {
+                name: 'd3',
+                pos: {
+                    x: 1449,
+                    y: 728
+                },
+                depth: 2
+            },
+            {
+                name: 'd2',
+                pos: {
+                    x: 448,
+                    y: 668
+                },
+                depth: 2
+            },
+            {
+                name: 's1',
+                pos: {
+                    x: 1499,
+                    y: 258
+                },
+                depth: 2
+            },
+            {
+                name: 'counter',
+                pos: {
+                    x: 577,
+                    y: 595
+                },
+                depth: 2
+            },
+            {
+                name: 'mf',
+                pos: {
+                    x: 833,
+                    y: 670
+                },
+                depth: 2
+            },
+            {
+                name: 'barstool_1',
+                pos: {
+                    x: 1242,
+                    y: 608
+                },
+                depth: 2
+            },
+            {
+                name: 'barstool_1',
+                pos: {
+                    x: 1093,
+                    y: 647
+                },
+                depth: 2
+            },
+            {
+                name: 'jo',
+                pos: {
+                    x: 655,
+                    y: 392
+                },
+                depth: 2
+            }
+        ]
     },
     preload: function () {
-        // load the objects
-        for (const elem of this.engine.objects) {
-            this.load.image(`${elem.name}`, `../assets/images/${elem.type}/${elem.url}`)
-        }
-
         // load the ui
         for (const elem of this.engine.ui) {
             this.load.image(`${elem.name}`, `../assets/images/ui/${elem.url}`)
+        }
+
+        // load the objects
+        for (const elem of this.objects) {
+            const e = this.engine.getObject(elem.name)
+            this.load.image(`${e.name}`, `../assets/images/${e.type}/${e.url}`)
         }
     },
     create: async function () {
         this.engine.initTooltip(this)
 
-        // add location
-        this.engine.addObject(this, 0, 0, this.engine.getObject('kitchen'), 1)
-
-        // add stairs
-        this.engine.addObject(this, 0, 0, this.engine.getObject('stairs'), 3)
-
-        // add door
-        this.engine.addObject(this, 175, 196, this.engine.getObject('door'), 2)
-
-        this.engine.addObject(this, 1425, 182, this.engine.getObject('closet'), 2)
-
-        this.engine.addObject(this, 614, 260, this.engine.getObject('clock'), 2)
-
-        this.engine.addObject(this, 367, 225, this.engine.getObject('furniture_01'), 2)
-
-        this.engine.addObject(this, 1028, 524, this.engine.getObject('furniture_03'), 2)
-
-        // add drawers
-        this.engine.addObject(this, 1589, 682, this.engine.getObject('d1'), 2)
-        this.engine.addObject(this, 1449, 728, this.engine.getObject('d3'), 2)
-        this.engine.addObject(this, 448, 668, this.engine.getObject('d2'), 2)
-
-        this.engine.addObject(this, 1499, 258, this.engine.getObject('s1'), 2)
-
-        // add counter
-        this.engine.addObject(this, 577, 595, this.engine.getObject('counter'), 2)
-        this.engine.addObject(this, 833, 670, this.engine.getObject('mf'), 2)
-
-        // add chair
-        this.engine.addObject(this, 1242, 608, this.engine.getObject('barstool_1'), 2)
-        this.engine.addObject(this, 1093, 647, this.engine.getObject('barstool_1'), 2)
-
-        // add mom (jo)
-        this.engine.addObject(this, 655, 392, this.engine.getObject('jo'), 2)
+        for (const elem of this.objects) {
+            this.engine.addObject(this, elem.pos, this.engine.getObject(elem.name), elem.depth)
+        }
     },
 });
