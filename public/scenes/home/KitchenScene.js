@@ -4,7 +4,7 @@ var KitchenScene = new Phaser.Class({
         Phaser.Scene.call(this, { "key": "KitchenScene" });
     },
     init: function () {
-        this.engine = new Engine();
+        this.engine = gameEngine;
 
         this.objects = [
             {

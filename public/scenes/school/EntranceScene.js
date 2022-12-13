@@ -4,7 +4,7 @@ var EntranceScene = new Phaser.Class({
         Phaser.Scene.call(this, { "key": "EntranceScene" });
     },
     init: function () {
-        this.engine = new Engine();
+        this.engine = gameEngine;
 
         this.objects = [
             {

@@ -40,6 +40,12 @@ class Engine {
                     }
                 },
                 title: 'Door',
+                mission:[
+                    {
+                        missionOrder: 1,
+                        condition: [1, 2]
+                    }
+                ]
             },
             // widgets
             {
@@ -148,6 +154,7 @@ class Engine {
                 },
                 title: 'Shelf',
             },
+            // character
             {
                 name: 'jo',
                 type: 'character',
@@ -300,7 +307,7 @@ class Engine {
             pixelPerfect: true
         }).on('pointerup', () => {
             this.hideTooltip()
-            this.showStoryExplainBar(this.seletedObj.actions.interact ? this.seletedObj.actions.interact.msgs : '')
+            this.interact(this.seletedObj)
         }).on('pointerover', () => {
             this.showActionInfoBar('Interact')
         }).on('pointerout', () => {
@@ -312,7 +319,8 @@ class Engine {
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
-            this.hideActionBtns()
+            this.hideTooltip()
+            this.talk(this.seletedObj)
         }).on('pointerover', () => {
             this.showActionInfoBar('Talk')
         }).on('pointerout', () => {
@@ -348,8 +356,10 @@ class Engine {
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
-            this.hideActionBtns()
-            if (this.seletedObj.actions.go.dir != '') scene.scene.start(this.seletedObj.actions.go.dir)
+            this.hideTooltip()
+            if (this.checkCondition(this.seletedObj.mission.find(e => e.missionOrder == gameMission.missionOrder).condition)) {
+                if (this.seletedObj.actions.go.dir != '') scene.scene.start(this.seletedObj.actions.go.dir)
+            }
         }).on('pointerover', () => {
             if (this.seletedObj.type == 'gate') {
                 this.showActionInfoBar(this.seletedObj.actions.go.dirName)
@@ -452,5 +462,29 @@ class Engine {
     setInvestigateMsg(msg) {
         this.tooltip.list[6].setText(msg)
         this.hideInvestigateMsg()
+    }
+    checkCondition(conditions) {
+        let res = true
+        for (const id of conditions) {
+            let mission = gameMission.getMission(id)
+            if (!mission.complete) {
+                console.log(mission)
+                res = mission.complete
+                this.showStoryExplainBar([mission.err])
+                break;
+            }
+        }
+
+        return res
+    }
+    talk(to) {
+        let mission = gameMission.missions.find(e => e.mission == gameMission.missionOrder && e.action == 'talk' && e.to == to.name)
+        mission.complete = true
+    }
+    interact(to) {
+        let mission = gameMission.missions.find(e => e.mission == gameMission.missionOrder && e.action == 'interact' && e.to == to.name)
+        mission.complete = true
+
+        this.showStoryExplainBar(to.actions.interact ? to.actions.interact.msgs : '')
     }
 }
