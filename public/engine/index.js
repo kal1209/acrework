@@ -42,7 +42,7 @@ class Engine {
                 title: 'Door',
                 mission:[
                     {
-                        missionOrder: 1,
+                        order: 1,
                         condition: [1, 2]
                     }
                 ]
@@ -160,7 +160,14 @@ class Engine {
                 type: 'character',
                 url: 'home/kitchen/jo.webp',
                 actions: {
-                    talk: {},
+                    talk: [
+                        {
+                            order: 1,
+                            msgs: [
+                                "Good morning! I hope you're ready for the new school year."
+                            ]
+                        }
+                    ],
                     quest: {},
                     flirt: {},
                 },
@@ -357,7 +364,7 @@ class Engine {
             pixelPerfect: true
         }).on('pointerup', () => {
             this.hideTooltip()
-            if (this.checkCondition(this.seletedObj.mission.find(e => e.missionOrder == gameMission.missionOrder).condition)) {
+            if (this.checkCondition(this.seletedObj.mission.find(e => e.order == gameMission.order).condition)) {
                 if (this.seletedObj.actions.go.dir != '') scene.scene.start(this.seletedObj.actions.go.dir)
             }
         }).on('pointerover', () => {
@@ -468,7 +475,6 @@ class Engine {
         for (const id of conditions) {
             let mission = gameMission.getMission(id)
             if (!mission.complete) {
-                console.log(mission)
                 res = mission.complete
                 this.showStoryExplainBar([mission.err])
                 break;
@@ -478,12 +484,19 @@ class Engine {
         return res
     }
     talk(to) {
-        let mission = gameMission.missions.find(e => e.mission == gameMission.missionOrder && e.action == 'talk' && e.to == to.name)
+        console.log(to)
+        let msgs = to.actions.talk.find(e => e.order == gameMission.order).msgs
+        
+        this.showStoryExplainBar(msgs)
+
+        let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'talk' && e.to == to.name)
         mission.complete = true
     }
     interact(to) {
-        let mission = gameMission.missions.find(e => e.mission == gameMission.missionOrder && e.action == 'interact' && e.to == to.name)
-        mission.complete = true
+        let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'interact' && e.to == to.name)
+        if (mission) {
+            mission.complete = true
+        }
 
         this.showStoryExplainBar(to.actions.interact ? to.actions.interact.msgs : '')
     }
