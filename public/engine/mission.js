@@ -11,6 +11,14 @@ class Mission {
             },
             {
                 id: 2,
+                action: 'quest',
+                to: 'jo',
+                order: 1,
+                complete: false,
+                err: "Deny, delay, desist. Also, Jo wanted to talk first."
+            },
+            {
+                id: 3,
                 action: 'interact',
                 to: 's1',
                 order: 1,

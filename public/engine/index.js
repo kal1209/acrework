@@ -43,7 +43,7 @@ class Engine {
                 mission:[
                     {
                         order: 1,
-                        condition: [1, 2]
+                        condition: [1, 2, 3]
                     }
                 ]
             },
@@ -168,8 +168,15 @@ class Engine {
                             ]
                         }
                     ],
-                    quest: {},
-                    flirt: {},
+                    quest: [
+                        {
+                            order: 1,
+                            msgs: [
+                                "What's wrong? You look like you've seen a ghost!"
+                            ]
+                        }
+                    ],
+                    flirt: [],
                 },
                 title: 'Jo',
             },
@@ -339,7 +346,8 @@ class Engine {
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
-            this.hideActionBtns()
+            this.hideTooltip()
+            this.quest(this.seletedObj)
         }).on('pointerover', () => {
             this.showActionInfoBar('Quest')
         }).on('pointerout', () => {
@@ -484,12 +492,19 @@ class Engine {
         return res
     }
     talk(to) {
-        console.log(to)
         let msgs = to.actions.talk.find(e => e.order == gameMission.order).msgs
         
         this.showStoryExplainBar(msgs)
 
         let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'talk' && e.to == to.name)
+        mission.complete = true
+    }
+    quest(to) {
+        let msgs = to.actions.quest.find(e => e.order == gameMission.order).msgs
+        
+        this.showStoryExplainBar(msgs)
+
+        let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'quest' && e.to == to.name)
         mission.complete = true
     }
     interact(to) {
