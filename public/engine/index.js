@@ -1,5 +1,6 @@
 class Engine {
     constructor() {
+        this.scene = undefined
         this.objects = [
             // locations
             {
@@ -181,6 +182,9 @@ class Engine {
                     flirt: [],
                 },
                 title: 'Jo',
+                body: [
+                    'jo.webp'
+                ]
             },
         ]
 
@@ -253,12 +257,12 @@ class Engine {
     getUI(name) { // get ui
         return this.ui.find(e => e.name == name)
     }
-    addObject(scene, pos, obj, depth, dir) { // add object such as location, widget, character, etc
+    addObject(pos, obj, depth, dir) { // add object such as location, widget, character, etc
         if (dir != '') obj.actions.go.dir = dir
-        console.log(obj)
-        scene.load.image(`${obj.name}`, `../engine/assets/location/${obj.url}`)
-        scene.load.once('complete', () => {
-            let tmp = scene.add.sprite(pos.x, pos.y, obj.name).setInteractive({
+
+        this.scene.load.image(`${obj.name}`, `../engine/assets/location/${obj.url}`)
+        this.scene.load.once('complete', () => {
+            let tmp = this.scene.add.sprite(pos.x, pos.y, obj.name).setInteractive({
                 // draggable: obj.draggable
                 draggable: false,
                 useHandCursor: obj.actions ? true : false,
@@ -287,20 +291,21 @@ class Engine {
                 }
             })
         })
-        scene.load.start()
+        this.scene.load.start()
     }
     init(scene) {
-        this.initTooltip(scene);
-        this.initStoryExplainBar(scene);
+        this.scene = scene
+        this.initTooltip();
+        this.initStoryExplainBar();
     }
-    initTooltip(scene) {
-        this.tooltip = scene.add.container(100, 100).setDepth(10).setAlpha(0)
+    initTooltip() {
+        this.tooltip = this.scene.add.container(100, 100).setDepth(10).setAlpha(0)
 
-        this.tooltip.add(scene.add.sprite(0, 0, this.getUI('frame_objname_gold').name)) // index: 0
-        this.tooltip.add(scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5)) // index: 1
+        this.tooltip.add(this.scene.add.sprite(0, 0, this.getUI('frame_objname_gold').name)) // index: 0
+        this.tooltip.add(this.scene.add.text(0, -5, '', { font: "bold 32px Arial", fill: "#fff" }).setOrigin(0.5)) // index: 1
 
         // add investigate circle button
-        this.tooltip.add(scene.add.sprite(-60, -100, this.getUI('investigate').name).setAlpha(0).setInteractive({
+        this.tooltip.add(this.scene.add.sprite(-60, -100, this.getUI('investigate').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
@@ -314,15 +319,15 @@ class Engine {
         })) // index: 2
 
         // add actions info bar
-        this.tooltip.add(scene.add.sprite(0, 80, this.getUI('frame_int_text').name).setAlpha(0)) // index: 3
-        this.tooltip.add(scene.add.text(0, 80, '', { font: "bold 28px Arial ", fill: "#000" }).setOrigin(0.5).setAlpha(0)) // index: 4
+        this.tooltip.add(this.scene.add.sprite(0, 80, this.getUI('frame_int_text').name).setAlpha(0)) // index: 3
+        this.tooltip.add(this.scene.add.text(0, 80, '', { font: "bold 28px Arial ", fill: "#000" }).setOrigin(0.5).setAlpha(0)) // index: 4
 
         // add investigate info
-        this.tooltip.add(scene.add.sprite(0, 300, this.getUI('frame_popup').name).setAlpha(0)) // index: 5
-        this.tooltip.add(scene.add.text(0, 300, '', { font: "bold 28px Arial", fill: "#000", align: 'center' }).setOrigin(0.5).setAlpha(0)) // index: 6
+        this.tooltip.add(this.scene.add.sprite(0, 300, this.getUI('frame_popup').name).setAlpha(0)) // index: 5
+        this.tooltip.add(this.scene.add.text(0, 300, '', { font: "bold 28px Arial", fill: "#000", align: 'center' }).setOrigin(0.5).setAlpha(0)) // index: 6
 
         // add interact circle button
-        this.tooltip.add(scene.add.sprite(60, -100, this.getUI('interact').name).setAlpha(0).setInteractive({
+        this.tooltip.add(this.scene.add.sprite(60, -100, this.getUI('interact').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
@@ -335,7 +340,7 @@ class Engine {
         })) // index: 7
 
         // add talk circle button
-        this.tooltip.add(scene.add.sprite(-115, -100, this.getUI('talk').name).setAlpha(0).setInteractive({
+        this.tooltip.add(this.scene.add.sprite(-115, -100, this.getUI('talk').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
@@ -348,7 +353,7 @@ class Engine {
         })) // index: 8
 
         // add quest circle button
-        this.tooltip.add(scene.add.sprite(0, -130, this.getUI('quest').name).setAlpha(0).setInteractive({
+        this.tooltip.add(this.scene.add.sprite(0, -130, this.getUI('quest').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
@@ -361,7 +366,7 @@ class Engine {
         })) // index: 9
 
         // add flirt circle button
-        this.tooltip.add(scene.add.sprite(115, -100, this.getUI('flirt').name).setAlpha(0).setInteractive({
+        this.tooltip.add(this.scene.add.sprite(115, -100, this.getUI('flirt').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
@@ -373,13 +378,13 @@ class Engine {
         })) // index: 10
 
         // add go circle button
-        this.tooltip.add(scene.add.sprite(115, -100, this.getUI('go').name).setAlpha(0).setInteractive({
+        this.tooltip.add(this.scene.add.sprite(115, -100, this.getUI('go').name).setAlpha(0).setInteractive({
             useHandCursor: true,
             pixelPerfect: true
         }).on('pointerup', () => {
             this.hideTooltip()
             if (this.checkCondition(this.seletedObj.mission.find(e => e.order == gameMission.order).condition)) {
-                if (this.seletedObj.actions.go.dir != '') scene.scene.start(this.seletedObj.actions.go.dir)
+                if (this.seletedObj.actions.go.dir != '') this.scene.scene.start(this.seletedObj.actions.go.dir)
             }
         }).on('pointerover', () => {
             if (this.seletedObj.type == 'gate') {
@@ -400,23 +405,25 @@ class Engine {
         this.hideInvestigateMsg()
         this.hoverDisabled = false
     }
-    initStoryExplainBar(scene) {
+    initStoryExplainBar() {
         this.explainMode.status = false
-        this.storyExplainContainer = scene.add.container(0, 0).setDepth(10).setAlpha(0)
-        this.storyExplainContainer.add(scene.add.sprite(0, 0, this.getUI('lock_bg').name).setOrigin(0).setInteractive({
+        this.storyExplainContainer = this.scene.add.container(0, 0).setDepth(10).setAlpha(0)
+        this.storyExplainContainer.add(this.scene.add.sprite(0, 0, this.getUI('lock_bg').name).setOrigin(0).setInteractive({
             pixelPerfect: false
         }).on('pointerup', () => {
             this.explainMode.step++;
             if (this.explainMode.step >= this.explainMode.msgs.length) {
                 this.hideStoryExplainBar()
             } else {
-                this.storyExplainContainer.list[1].setText(this.explainMode.msgs[this.explainMode.step])
+                this.storyExplainContainer.list[2].setText(this.explainMode.msgs[this.explainMode.step])
             }
         }).on('pointerover', () => {
         }).on('pointerout', () => {
         }))
 
-        this.storyExplainContainer.add(scene.add.text(scene.sys.game.canvas.width / 2, scene.sys.game.canvas.height - 100, '', { font: "bold 48px Arial", fill: "#000" }).setOrigin(0.5))
+        this.storyExplainContainer.add(this.scene.add.container(0, 0))
+
+        this.storyExplainContainer.add(this.scene.add.text(this.scene.sys.game.canvas.width / 2, this.scene.sys.game.canvas.height - 100, '', { font: "bold 48px Arial", fill: "#0f0" }).setOrigin(0.5))
     }
     showStoryExplainBar(msgs) {
         this.explainMode.status = true
@@ -424,7 +431,19 @@ class Engine {
         this.explainMode.msgs = msgs
 
         this.storyExplainContainer.setAlpha(1)
-        this.storyExplainContainer.list[1].setText(this.explainMode.msgs[this.explainMode.step])
+        
+        // remove all children objects
+        this.storyExplainContainer.list[1].removeAll()
+
+        // Set explanation  text
+        this.storyExplainContainer.list[2].setText(this.explainMode.msgs[this.explainMode.step]).setDepth(10)
+    }
+    addCharacterOnExplainMode(to) {
+        this.scene.load.image(`${to.title}_explan`, `../engine/assets/character/${to.title}/${to.body[0]}`)
+        this.scene.load.once('complete', () => {
+            this.storyExplainContainer.list[1].add(this.scene.add.sprite(this.scene.sys.game.canvas.width / 2, this.scene.sys.game.canvas.height, `${to.title}_explan`).setOrigin(0.5, 1).setScale(3))
+        })
+        this.scene.load.start()
     }
     hideStoryExplainBar() {
         this.explainMode.status = false
@@ -501,6 +520,7 @@ class Engine {
         let msgs = to.actions.talk.find(e => e.order == gameMission.order).msgs
 
         this.showStoryExplainBar(msgs)
+        this.addCharacterOnExplainMode(to)
 
         let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'talk' && e.to == to.name)
         mission.complete = true
@@ -509,6 +529,7 @@ class Engine {
         let msgs = to.actions.quest.find(e => e.order == gameMission.order).msgs
 
         this.showStoryExplainBar(msgs)
+        this.addCharacterOnExplainMode(to)
 
         let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'quest' && e.to == to.name)
         mission.complete = true

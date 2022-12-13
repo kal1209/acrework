@@ -150,7 +150,6 @@ var KitchenScene = new Phaser.Class({
         // load the objects
         for (const elem of this.objects) {
             this.engine.addObject(
-                this, 
                 elem.pos, 
                 this.engine.getObject(elem.name), 
                 elem.depth, 
