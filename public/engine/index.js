@@ -26,6 +26,7 @@ class Engine {
                     }
                 },
                 title: 'Stairs',
+                mission: []
             },
             {
                 name: 'door',
@@ -40,7 +41,7 @@ class Engine {
                     }
                 },
                 title: 'Door',
-                mission:[
+                mission: [
                     {
                         order: 1,
                         condition: [1, 2, 3]
@@ -172,6 +173,7 @@ class Engine {
                         {
                             order: 1,
                             msgs: [
+                                "Whoa... even [jo] looks different. Younger, happier, and less\nresentful toward me.",
                                 "What's wrong? You look like you've seen a ghost!"
                             ]
                         }
@@ -253,35 +255,39 @@ class Engine {
     }
     addObject(scene, pos, obj, depth, dir) { // add object such as location, widget, character, etc
         if (dir != '') obj.actions.go.dir = dir
+        console.log(obj)
+        scene.load.image(`${obj.name}`, `../engine/assets/location/${obj.url}`)
+        scene.load.once('complete', () => {
+            let tmp = scene.add.sprite(pos.x, pos.y, obj.name).setInteractive({
+                // draggable: obj.draggable
+                draggable: false,
+                useHandCursor: obj.actions ? true : false,
+                pixelPerfect: true
+            }).setOrigin(0, 0).setDepth(depth).on('drag', function (pointer, dragX, dragY) {
+                this.setPosition(dragX, dragY);
+                console.log([obj.name, dragX, dragY])
+            }).on('pointerup', () => {
+                if (obj.actions) {
+                    this.seletedObj = obj
 
-        let tmp = scene.add.sprite(pos.x, pos.y, obj.name).setInteractive({
-            // draggable: obj.draggable
-            draggable: false,
-            useHandCursor: obj.actions ? true : false,
-            pixelPerfect: true
-        }).setOrigin(0, 0).setDepth(depth).on('drag', function (pointer, dragX, dragY) {
-            this.setPosition(dragX, dragY);
-            console.log([obj.name, dragX, dragY])
-        }).on('pointerup', () => {
-            if (obj.actions) {
-                this.seletedObj = obj
-
-                this.hoverDisabled = true
-                this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
-                this.showActionBtns(obj.actions)
-                this.setInvestigateMsg(obj.actions.investigate ? obj.actions.investigate.msgs[0] : '')
-            } else {
-                this.hideTooltip()
-            }
-        }).on('pointerover', () => {
-            if (obj.actions && !this.hoverDisabled) {
-                this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
-            }
-        }).on('pointerout', () => {
-            if (!this.hoverDisabled) {
-                this.hideTooltip()
-            }
+                    this.hoverDisabled = true
+                    this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
+                    this.showActionBtns(obj.actions)
+                    this.setInvestigateMsg(obj.actions.investigate ? obj.actions.investigate.msgs[0] : '')
+                } else {
+                    this.hideTooltip()
+                }
+            }).on('pointerover', () => {
+                if (obj.actions && !this.hoverDisabled) {
+                    this.showTooltip(tmp.width / 2 + tmp.x, tmp.height / 2 + tmp.y - 100, obj.title)
+                }
+            }).on('pointerout', () => {
+                if (!this.hoverDisabled) {
+                    this.hideTooltip()
+                }
+            })
         })
+        scene.load.start()
     }
     init(scene) {
         this.initTooltip(scene);
@@ -410,7 +416,7 @@ class Engine {
         }).on('pointerout', () => {
         }))
 
-        this.storyExplainContainer.add(scene.add.text(scene.sys.game.canvas.width/2, scene.sys.game.canvas.height - 100, '', { font: "bold 48px Arial", fill: "#000" }).setOrigin(0.5))
+        this.storyExplainContainer.add(scene.add.text(scene.sys.game.canvas.width / 2, scene.sys.game.canvas.height - 100, '', { font: "bold 48px Arial", fill: "#000" }).setOrigin(0.5))
     }
     showStoryExplainBar(msgs) {
         this.explainMode.status = true
@@ -493,7 +499,7 @@ class Engine {
     }
     talk(to) {
         let msgs = to.actions.talk.find(e => e.order == gameMission.order).msgs
-        
+
         this.showStoryExplainBar(msgs)
 
         let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'talk' && e.to == to.name)
@@ -501,7 +507,7 @@ class Engine {
     }
     quest(to) {
         let msgs = to.actions.quest.find(e => e.order == gameMission.order).msgs
-        
+
         this.showStoryExplainBar(msgs)
 
         let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'quest' && e.to == to.name)
