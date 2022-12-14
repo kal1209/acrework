@@ -186,6 +186,20 @@ class Engine {
                     'jo.webp'
                 ]
             },
+            {
+                name: 'flora',
+                type: 'character',
+                url: 'home/kitchen/florasitting.webp',
+                actions: {
+                    talk: [
+                    ],
+                    quest: [
+                    ],
+                    flirt: [],
+                },
+                title: 'Flora',
+                body: []
+            }
         ]
 
         this.ui = [

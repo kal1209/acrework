@@ -135,6 +135,14 @@ var KitchenScene = new Phaser.Class({
                     y: 392
                 },
                 depth: 2
+            },
+            {
+                name: 'flora',
+                pos: {
+                    x: 1041,
+                    y: 455
+                },
+                depth: 2
             }
         ]
     },
