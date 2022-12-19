@@ -159,6 +159,7 @@ class Engine {
             // character
             {
                 name: 'jo',
+                title: 'Jo',
                 type: 'character',
                 url: 'home/kitchen/jo.webp',
                 actions: {
@@ -181,10 +182,62 @@ class Engine {
                     ],
                     flirt: [],
                 },
-                title: 'Jo',
-                body: [
-                    'jo.webp'
-                ]
+                model: {
+                    'idle': {
+                        marterial: [
+                            {
+                                url: 'b1hair.webp',
+                                x: 0,
+                                y: 0
+                            },
+                            {
+                                url: 'face_smile.webp',
+                                x: 5.79,
+                                y: -717
+                            },
+                            {
+                                url: 'b1bra.webp',
+                                x: -42,
+                                y: -414
+                            },
+                            {
+                                url: 'b1panty.webp',
+                                x: 16,
+                                y: -148
+                            },
+                            {
+                                url: 'b1stocking.webp',
+                                x: 38,
+                                y: 0,
+                            },
+                            {
+                                url: 'b1skirt.webp',
+                                x: 37,
+                                y: -72
+                            },
+                            {
+                                url: 'b1blazer.webp',
+                                x: -3.6,
+                                y: -198
+                            },
+                            {
+                                url: 'b1rightarm1_n.webp',
+                                x: -179,
+                                y: -141
+                            },
+                            {
+                                url: 'b1leftarm1_n.webp',
+                                x: 144,
+                                y: 2.89
+                            },
+                            {
+                                url: 'b1arm1_c.webp',
+                                x: -52,
+                                y: -66
+                            },
+                        ]
+                    }
+                }
             },
             {
                 name: 'flora',
@@ -198,7 +251,12 @@ class Engine {
                     flirt: [],
                 },
                 title: 'Flora',
-                body: []
+                model: {
+                    'idle': {
+                        marterial: [
+                        ]
+                    }
+                }
             }
         ]
 
@@ -264,6 +322,8 @@ class Engine {
             msgs: [],
             step: 0
         }
+
+        this.xRayMode = 0
     }
     getObject(name) { // get object info by name
         return this.objects.find(e => e.name == name)
@@ -307,7 +367,7 @@ class Engine {
         })
         this.scene.load.start()
     }
-    init(scene) {
+    init(scene) { // initialize scene
         this.scene = scene
         this.initTooltip();
         this.initStoryExplainBar();
@@ -437,7 +497,7 @@ class Engine {
 
         this.storyExplainContainer.add(this.scene.add.container(0, 0))
 
-        this.storyExplainContainer.add(this.scene.add.text(this.scene.sys.game.canvas.width / 2, this.scene.sys.game.canvas.height - 100, '', { font: "bold 48px Arial", fill: "#0f0" }).setOrigin(0.5))
+        this.storyExplainContainer.add(this.scene.add.text(this.scene.sys.game.canvas.width / 2, this.scene.sys.game.canvas.height - 100, '', { font: "bold 48px Arial", fill: "#000" }).setOrigin(0.5))
     }
     showStoryExplainBar(msgs) {
         this.explainMode.status = true
@@ -445,19 +505,37 @@ class Engine {
         this.explainMode.msgs = msgs
 
         this.storyExplainContainer.setAlpha(1)
-        
+
         // remove all children objects
         this.storyExplainContainer.list[1].removeAll()
 
         // Set explanation  text
         this.storyExplainContainer.list[2].setText(this.explainMode.msgs[this.explainMode.step]).setDepth(10)
     }
-    addCharacterOnExplainMode(to) {
-        this.scene.load.image(`${to.title}_explan`, `../engine/assets/character/${to.title}/${to.body[0]}`)
-        this.scene.load.once('complete', () => {
-            this.storyExplainContainer.list[1].add(this.scene.add.sprite(this.scene.sys.game.canvas.width / 2, this.scene.sys.game.canvas.height, `${to.title}_explan`).setOrigin(0.5, 1).setScale(3))
-        })
+    addCharacterModelOnExplainMode(to) {
+        // set the posture
+        let pose = 'idle'
+
+        // add container
+        this.storyExplainContainer.list[1].add(this.scene.add.container(this.scene.sys.game.canvas.width / 2, this.scene.sys.game.canvas.height))
+
+        // add material for model
+        for (const elem of to.model[pose].marterial) {
+            this.scene.load.image(`${to.name}_${elem.url}`, `../engine/assets/character/${to.name}/model/${pose}/${elem.url}`)
+
+            this.scene.load.once('complete', () => {
+                this.storyExplainContainer.list[1].list[0].add(this.scene.add.sprite(elem.x, elem.y, `${to.name}_${elem.url}`).setOrigin(0.5, 1).setInteractive({
+                    draggable: true,
+                    useHandCursor: true,
+                    pixelPerfect: true
+                }).on('drag', function (pointer, dragX, dragY) {
+                    this.setPosition(dragX, dragY);
+                    console.log([dragX, dragY])
+                }))
+            })
+        }
         this.scene.load.start()
+
     }
     hideStoryExplainBar() {
         this.explainMode.status = false
@@ -534,7 +612,8 @@ class Engine {
         let msgs = to.actions.talk.find(e => e.order == gameMission.order).msgs
 
         this.showStoryExplainBar(msgs)
-        this.addCharacterOnExplainMode(to)
+        // show character model
+        this.addCharacterModelOnExplainMode(to)
 
         let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'talk' && e.to == to.name)
         mission.complete = true
@@ -543,7 +622,8 @@ class Engine {
         let msgs = to.actions.quest.find(e => e.order == gameMission.order).msgs
 
         this.showStoryExplainBar(msgs)
-        this.addCharacterOnExplainMode(to)
+        // show character model
+        this.addCharacterModelOnExplainMode(to)
 
         let mission = gameMission.missions.find(e => e.order == gameMission.order && e.action == 'quest' && e.to == to.name)
         mission.complete = true
